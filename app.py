@@ -999,11 +999,11 @@ with col_main:
     
     # CREATE TABS
     tab1, tab2, tab3, tab4, tab5 = st.tabs([
-        "🏘️ District Insights",
-        "🗺️ Geographic Analysis", 
-        "📊 Performance Metrics",
-        "📈 Usage Trends",
-        "🌿 Impact Analysis"
+        "🏘️ District Insights(Click)",
+        "🗺️ Geographic Analysis(Click)", 
+        "📊 Performance Metrics(Click)",
+        "📈 Usage Trends(Click)",
+        "🌿 Impact Analysis(Click)"
     ])
     
     # TAB 1: DISTRICT INSIGHTS
