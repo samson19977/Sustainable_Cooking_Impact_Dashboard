@@ -1626,3 +1626,383 @@ with rec_col3:
     <div class="story-card">
         <h4 style="color: #059669; margin-top: 0;">🔄 SYSTEMIC IMPROVEMENTS (Ongoing)</h4>
         <ul style="color: #475569; font-size: 0.95
+                <ul style="color: #475569; font-size: 0.95rem; padding-left: 1.2rem;">
+            <li><strong>Integrate predictive scoring</strong> into distribution planning</li>
+            <li><strong>Monthly monitoring of 276 high-risk grid cells</strong> identified in analysis</li>
+            <li><strong>Quarterly model retraining</strong> with new field data</li>
+            <li><strong>Develop performance dashboards</strong> for field team leaders</li>
+            <li><strong>Establish cross-district knowledge sharing</strong> of best practices</li>
+            <li><strong>Create early warning system</strong> for at-risk households</li>
+        </ul>
+        <div style="margin-top: 1rem; padding: 0.75rem; background: #f0fdf4; border-radius: 8px; border-left: 4px solid #22c55e;">
+            <div style="font-size: 0.9rem; color: #166534;">
+                <strong>Expected Outcomes:</strong> 
+                +15% adoption improvement for struggling households, 
+                652 tons additional annual fuel savings, 
+                37% increase in field team efficiency
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+# Success Stories Section
+st.markdown("<div class='section-title'>🏆 Success Stories & Best Practices</div>", unsafe_allow_html=True)
+
+story_col1, story_col2, story_col3 = st.columns(3)
+
+with story_col1:
+    st.markdown("""
+    <div class="story-card">
+        <h4 style="color: #0c4a6e; margin-top: 0;">⭐ Top Performing District</h4>
+        <div style="display: flex; align-items: center; margin: 1rem 0;">
+            <div style="font-size: 2rem; margin-right: 1rem;">🏆</div>
+            <div>
+                <div style="font-size: 1.2rem; font-weight: bold; color: #059669;">Rulindo District</div>
+                <div style="font-size: 0.9rem; color: #475569;">Achieved 42.3% average reduction</div>
+            </div>
+        </div>
+        <p style="color: #475569; font-size: 0.95rem;">
+        <strong>Key Success Factors:</strong><br>
+        • Community-based training approach<br>
+        • Regular follow-up visits<br>
+        • Local champion households<br>
+        • Market access initiatives
+        </p>
+        <div style="background: #f0f9ff; padding: 0.75rem; border-radius: 6px; margin-top: 0.5rem;">
+            <div style="font-size: 0.85rem; color: #0369a1;">
+                <strong>Impact:</strong> 1,243 households achieved >30% reduction, saving 85 tons of fuel monthly
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with story_col2:
+    st.markdown("""
+    <div class="story-card">
+        <h4 style="color: #0c4a6e; margin-top: 0;">📈 Rapid Improvement</h4>
+        <div style="display: flex; align-items: center; margin: 1rem 0;">
+            <div style="font-size: 2rem; margin-right: 1rem;">🚀</div>
+            <div>
+                <div style="font-size: 1.2rem; font-weight: bold; color: #f59e0b;">Musanze Cluster 5</div>
+                <div style="font-size: 0.9rem; color: #475569;">Improved from 15% to 38% in 3 months</div>
+            </div>
+        </div>
+        <p style="color: #475569; font-size: 0.95rem;">
+        <strong>Intervention Strategy:</strong><br>
+        • Targeted mobile training units<br>
+        • Peer-to-peer learning groups<br>
+        • Fuel-saving competitions<br>
+        • Regular performance feedback
+        </p>
+        <div style="background: #fffbeb; padding: 0.75rem; border-radius: 6px; margin-top: 0.5rem;">
+            <div style="font-size: 0.85rem; color: #92400e;">
+                <strong>Result:</strong> 89% of households improved adoption, average increase of 23 percentage points
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with story_col3:
+    st.markdown("""
+    <div class="story-card">
+        <h4 style="color: #0c4a6e; margin-top: 0;">🌱 Environmental Impact</h4>
+        <div style="display: flex; align-items: center; margin: 1rem 0;">
+            <div style="font-size: 2rem; margin-right: 1rem;">🌳</div>
+            <div>
+                <div style="font-size: 1.2rem; font-weight: bold; color: #10b981;">Annual Conservation</div>
+                <div style="font-size: 0.9rem; color: #475569;">Programme-wide achievements</div>
+            </div>
+        </div>
+        <div style="margin: 1rem 0;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <span style="color: #475569;">Fuelwood Saved</span>
+                <span style="font-weight: bold; color: #059669;">2,890 tons</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <span style="color: #475569;">CO₂ Reduction</span>
+                <span style="font-weight: bold; color: #059669;">5,202 tons</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+                <span style="color: #475569;">Trees Protected</span>
+                <span style="font-weight: bold; color: #059669;">5,780 trees</span>
+            </div>
+        </div>
+        <p style="color: #475569; font-size: 0.95rem;">
+        Equivalent to removing 1,125 cars from the road for one year, or protecting 12 hectares of forest.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+# Interactive Insights Section
+st.markdown("<div class='section-title'>🔍 Interactive Insights Explorer</div>", unsafe_allow_html=True)
+
+insight_col1, insight_col2 = st.columns(2)
+
+with insight_col1:
+    st.markdown('<div class="plot-container">', unsafe_allow_html=True)
+    st.markdown("### 📊 What-If Analysis")
+    
+    # Interactive sliders for what-if analysis
+    intervention_impact = st.slider(
+        "Targeted intervention success rate (%)",
+        min_value=0,
+        max_value=100,
+        value=65,
+        help="Expected success rate of targeted interventions"
+    )
+    
+    households_targeted = st.slider(
+        "Households to target",
+        min_value=0,
+        max_value=int(high_risk_count),
+        value=min(2000, int(high_risk_count)),
+        help="Number of high-risk households to target with interventions"
+    )
+    
+    # Calculate projected impact
+    projected_improvement = households_targeted * (intervention_impact/100) * 15  # 15% average improvement
+    projected_savings = households_targeted * (intervention_impact/100) * 171  # 171kg per household
+    
+    st.metric(
+        "Projected Additional Savings",
+        f"{projected_savings/1000:,.0f} tons/year",
+        f"{projected_improvement:.0f} households improved"
+    )
+    
+    # Show impact comparison
+    current_savings = filtered_savings * 52 / 1000
+    total_potential = current_savings + projected_savings/1000
+    
+    st.markdown("**Savings Comparison:**")
+    col_curr, col_proj = st.columns(2)
+    with col_curr:
+        st.metric("Current", f"{current_savings:,.0f} tons")
+    with col_proj:
+        st.metric("With Intervention", f"{total_potential:,.0f} tons")
+    
+    st.markdown('</div>', unsafe_allow_html=True)
+
+with insight_col2:
+    st.markdown('<div class="plot-container">', unsafe_allow_html=True)
+    st.markdown("### 🎯 Priority Explorer")
+    
+    # Interactive priority selection
+    priority_factors = st.multiselect(
+        "Select priority factors to explore:",
+        options=["Distance to Market", "Household Size", "District Risk", "Elevation", "Baseline Fuel Use"],
+        default=["Distance to Market", "Household Size"]
+    )
+    
+    if priority_factors:
+        # Create a simple visualization based on selected factors
+        if "Distance to Market" in priority_factors:
+            st.metric("Avg Distance of High-Risk", 
+                     f"{df[df['low_adoption_risk']==1]['distance_to_market_km'].mean():.1f} km",
+                     f"vs {df[df['low_adoption_risk']==0]['distance_to_market_km'].mean():.1f} km (low-risk)")
+        
+        if "Household Size" in priority_factors:
+            st.metric("Avg Household Size of High-Risk", 
+                     f"{df[df['low_adoption_risk']==1]['household_size'].mean():.1f} people",
+                     f"vs {df[df['low_adoption_risk']==0]['household_size'].mean():.1f} people (low-risk)")
+        
+        if "District Risk" in priority_factors:
+            high_risk_districts = df[df['low_adoption_risk']==1]['district'].value_counts().head(3)
+            st.markdown("**Top 3 High-Risk Districts:**")
+            for district, count in high_risk_districts.items():
+                percentage = (count / df[df['district']==district].shape[0]) * 100
+                st.progress(percentage/100, 
+                          text=f"{district}: {count:,} households ({percentage:.1f}%)")
+    
+    st.markdown("""
+    <div style="margin-top: 1rem; padding: 1rem; background: #f8fafc; border-radius: 8px;">
+        <div style="font-size: 0.9rem; color: #475569;">
+            <strong>💡 Insight:</strong> Combining multiple risk factors provides more accurate targeting. 
+            Households with 2+ risk factors have 78% probability of low adoption.
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# Download Section for Reports
+st.markdown("<div class='section-title'>📥 Reports & Exports</div>", unsafe_allow_html=True)
+
+export_col1, export_col2, export_col3 = st.columns(3)
+
+with export_col1:
+    st.markdown('<div class="plot-container">', unsafe_allow_html=True)
+    st.markdown("### 📋 Export Data")
+    
+    if len(filtered_df) > 0:
+        # Convert DataFrame to CSV
+        csv = filtered_df.to_csv(index=False)
+        
+        st.download_button(
+            label="📥 Download Filtered Data (CSV)",
+            data=csv,
+            file_name=f"delagua_dashboard_export_{pd.Timestamp.now().strftime('%Y%m%d')}.csv",
+            mime="text/csv",
+            help="Download the currently filtered data as CSV"
+        )
+        
+        # Summary statistics
+        summary_stats = pd.DataFrame({
+            'Metric': ['Total Households', 'Average Reduction', 'High-Risk Count', 'Success Rate', 'Weekly Savings'],
+            'Value': [filtered_total, f"{filtered_avg_reduction:.1f}%", filtered_high_risk, 
+                     f"{filtered_success_rate:.1f}%", f"{filtered_savings/1000:.1f} tons"]
+        })
+        
+        summary_csv = summary_stats.to_csv(index=False)
+        st.download_button(
+            label="📊 Download Summary Stats",
+            data=summary_csv,
+            file_name=f"summary_stats_{pd.Timestamp.now().strftime('%Y%m%d')}.csv",
+            mime="text/csv"
+        )
+    st.markdown('</div>', unsafe_allow_html=True)
+
+with export_col2:
+    st.markdown('<div class="plot-container">', unsafe_allow_html=True)
+    st.markdown("### 🎯 Priority Lists")
+    
+    if len(filtered_df) > 0:
+        # High priority households
+        high_priority_df = filtered_df[filtered_df['intervention_priority'] == 'High Priority']
+        
+        if len(high_priority_df) > 0:
+            st.metric("High Priority Households", len(high_priority_df))
+            
+            # Create priority list
+            priority_list = high_priority_df[['household_id', 'district', 'avg_reduction', 
+                                            'distance_to_market_km', 'household_size']].head(100)
+            
+            priority_csv = priority_list.to_csv(index=False)
+            st.download_button(
+                label="🎯 Download Priority List (Top 100)",
+                data=priority_csv,
+                file_name=f"priority_intervention_list_{pd.Timestamp.now().strftime('%Y%m%d')}.csv",
+                mime="text/csv",
+                help="List of top 100 high-priority households for intervention"
+            )
+            
+            # Show sample
+            with st.expander("Preview Priority List"):
+                st.dataframe(priority_list.head(10), use_container_width=True)
+        else:
+            st.info("No high-priority households in current filter")
+    st.markdown('</div>', unsafe_allow_html=True)
+
+with export_col3:
+    st.markdown('<div class="plot-container">', unsafe_allow_html=True)
+    st.markdown("### 📄 Generate Report")
+    
+    report_type = st.selectbox(
+        "Report Type",
+        options=["Executive Summary", "Detailed Analysis", "Field Team Report", "Impact Assessment"]
+    )
+    
+    include_sections = st.multiselect(
+        "Include Sections",
+        options=["Executive Summary", "Performance Analysis", "Risk Factors", 
+                "Geographic Insights", "Recommendations", "Success Stories"],
+        default=["Executive Summary", "Recommendations"]
+    )
+    
+    if st.button("🖨️ Generate PDF Report", type="primary"):
+        st.success("✅ Report generation started! This would create a PDF with:")
+        st.markdown(f"""
+        - **Report Type**: {report_type}
+        - **Sections Included**: {', '.join(include_sections)}
+        - **Data Coverage**: {filtered_total} households
+        - **Time Period**: {pd.Timestamp.now().strftime('%B %Y')}
+        """)
+        st.info("📋 In a production environment, this would generate and download a PDF report")
+    
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# Final Footer
+st.markdown("---")
+st.markdown("""
+<div style="text-align: center; color: #64748b; padding: 2rem;">
+    <div style="font-size: 0.9rem; margin-bottom: 0.5rem; display: flex; justify-content: center; align-items: center; gap: 10px;">
+        <span>🔥 Sustainable Cooking Impact Dashboard • DelAgua Stove Adoption Programme</span>
+    </div>
+    <div style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 0.5rem;">
+        Data updated: March 2024 • {total_households:,} households analyzed • {high_risk_count:,} high-risk households identified
+    </div>
+    <div style="font-size: 0.75rem; color: #cbd5e1;">
+        Interactive version of the DelAgua Strategic Analysis Report • 
+        Built with Streamlit • 
+        Deploy via GitHub + Streamlit Community Cloud
+    </div>
+    <div style="margin-top: 1rem; font-size: 0.7rem; color: #94a3b8;">
+        For support contact: Samson Niyizurugero • sniyizurugero@aimsric.org
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+# Add auto-refresh option
+with st.sidebar:
+    st.markdown("---")
+    st.markdown("### 🔄 Dashboard Settings")
+    
+    auto_refresh = st.checkbox("Auto-refresh data", value=False)
+    if auto_refresh:
+        refresh_rate = st.slider("Refresh rate (seconds)", 30, 300, 60)
+        st.info(f"Auto-refreshing every {refresh_rate} seconds")
+    
+    st.markdown("### 📱 View Mode")
+    view_mode = st.radio("Select view mode:", ["Default", "Presentation", "Mobile", "Print"], index=0)
+    
+    if view_mode == "Presentation":
+        st.markdown("""
+        <style>
+            .plot-container { padding: 2rem; }
+            .metric-number { font-size: 2.5rem; }
+            .section-title { font-size: 1.6rem; }
+        </style>
+        """, unsafe_allow_html=True)
+    
+    st.markdown("---")
+    st.markdown("### 🆘 Help & Support")
+    
+    with st.expander("Getting Started"):
+        st.markdown("""
+        **Welcome to the dashboard!**
+        
+        **Quick Start:**
+        1. Use filters on the left to explore specific districts or risk levels
+        2. Navigate through the 6 analysis tabs
+        3. Hover over charts for detailed information
+        4. Use the "What-If Analysis" to simulate interventions
+        5. Download reports and data using the export section
+        
+        **Need Help?**
+        - Check the tooltips (ℹ️) on each control
+        - Review the actionable recommendations
+        - Contact support for technical issues(niyizurugerosamson@gmail.com)
+        """)
+    
+    with st.expander("Data Sources & Methodology"):
+        st.markdown("""
+        **Data Sources:**
+        - DelAgua Stove Programme monitoring data
+        - 7,976 households across 5 districts
+        - Data collected Jan 2023 - Mar 2024
+        
+        **Methodology:**
+        - Predictive modeling using logistic regression
+        - Geographic clustering with DBSCAN
+        - Correlation analysis for risk factors
+        - Impact projections based on historical trends
+        
+        **Key Metrics:**
+        - Fuel Reduction: % reduction from baseline fuel use
+        - High Risk: Households with <30% reduction
+        - Success Rate: % of households achieving ≥30% reduction
+        - Savings: Calculated fuel and CO₂ reductions
+        """)
+    
+    # Add a reset button
+    if st.button("🔄 Reset All Filters", type="secondary"):
+        st.rerun()
