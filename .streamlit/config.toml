@@ -2,10 +2,17 @@
 primaryColor = "#0c4a6e"
 backgroundColor = "#f8fafc"
 secondaryBackgroundColor = "#ffffff"
-textColor = "#1e293b"
+textColor = "#0f172a"
 font = "sans serif"
 
 [server]
-maxUploadSize = 50  # MB
+maxUploadSize = 1000
 enableCORS = false
 enableXsrfProtection = true
+
+[browser]
+serverAddress = "localhost"
+gatherUsageStats = false
+
+[runner]
+magicEnabled = false
