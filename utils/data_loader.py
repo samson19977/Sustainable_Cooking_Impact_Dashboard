@@ -1,130 +1,77 @@
-# utils/data_loader.py - Data loading and cleaning utilities
-# =====================================================
-
+# utils/data_loader.py
 import pandas as pd
 import numpy as np
 import streamlit as st
 
-def load_and_clean_data():
-    """Load and clean dataset with proper district name cleaning."""
+@st.cache_data
+def load_and_process_data(file_path="delagua_stove_data_cleaned.csv"):
+    """Load and process the DelAgua data"""
     try:
-        # Load your actual CSV - UPDATED PATH
-        df = pd.read_csv("delagua_stove_data_cleaned.csv")
+        # Load the CSV file
+        df = pd.read_csv(file_path)
         
-        # Clean district names
-        if 'district' in df.columns:
-            df['district'] = df['district'].astype(str).str.strip().str.title()
-            
-            # Fix spelling variations
-            district_corrections = {
-                'Burера': 'Burera',
-                'Gakenki': 'Gakenke',
-                'Musanza': 'Musanze',
-                'Nyabihi': 'Nyabihu',
-                'Rulino': 'Rulindo'
-            }
-            
-            df['district'] = df['district'].replace(district_corrections)
+        # Clean column names
+        df.columns = df.columns.str.strip().str.lower().str.replace(' ', '_')
         
-        # Handle dates if column exists
-        if 'distribution_date' in df.columns:
-            def safe_date_parse(date_str):
-                try:
-                    return pd.to_datetime(date_str, format='%d/%m/%Y')
-                except:
-                    try:
-                        return pd.to_datetime(date_str, format='%Y-%m-%d')
-                    except:
-                        return pd.to_datetime(date_str, errors='coerce')
+        # Identify usage month columns
+        usage_cols = [col for col in df.columns if 'usage_month' in col]
+        
+        if usage_cols and len(usage_cols) >= 1:
+            # Convert usage columns to numeric
+            for col in usage_cols:
+                df[col] = pd.to_numeric(df[col], errors='coerce')
             
-            df['distribution_date'] = df['distribution_date'].apply(safe_date_parse)
-            df['distribution_year'] = df['distribution_date'].dt.year
-            df['distribution_month'] = df['distribution_date'].dt.month
+            # Calculate average monthly usage
+            df['avg_monthly_usage_kg'] = df[usage_cols].mean(axis=1, skipna=True)
             
-            df['distribution_year'] = df['distribution_year'].fillna(2023).astype(int)
-            df['distribution_month'] = df['distribution_month'].fillna(1).astype(int)
+            # Check if we have baseline data
+            if 'baseline_fuel_kg_person_week' in df.columns and 'household_size' in df.columns:
+                df['baseline_fuel_kg_person_week'] = pd.to_numeric(df['baseline_fuel_kg_person_week'], errors='coerce')
+                df['household_size'] = pd.to_numeric(df['household_size'], errors='coerce')
+                
+                # Calculate expected monthly fuel use
+                df['expected_weekly_kg'] = df['baseline_fuel_kg_person_week'] * df['household_size']
+                df['expected_monthly_kg'] = df['expected_weekly_kg'] * 4.33
+                
+                # Calculate reduction percentage
+                df['avg_reduction'] = ((df['expected_monthly_kg'] - df['avg_monthly_usage_kg']) / 
+                                      df['expected_monthly_kg'].replace(0, np.nan)) * 100
+            else:
+                max_usage = df[usage_cols].max(axis=1, skipna=True)
+                df['avg_reduction'] = ((max_usage - df['avg_monthly_usage_kg']) / 
+                                      max_usage.replace(0, np.nan)) * 100
+            
+            # Handle NaN values and extreme values
+            df['avg_reduction'] = df['avg_reduction'].fillna(0)
+            df['avg_reduction'] = df['avg_reduction'].replace([np.inf, -np.inf], 0)
+            df['avg_reduction'] = df['avg_reduction'].clip(-100, 100)
+            
         else:
-            df['distribution_year'] = 2023
-            df['distribution_month'] = 1
+            df['avg_reduction'] = 0
         
-        # Ensure required columns exist
-        required_columns = {
-            'avg_reduction': 0,
-            'distance_to_market_km': 0,
-            'elevation_m': 1500,
-            'household_size': 1,
-            'latitude': -1.5,
-            'longitude': 29.7,
-            'baseline_fuel_kg_person_week': 0
-        }
-        
-        for col, default in required_columns.items():
-            if col not in df.columns:
-                df[col] = default
-        
-        # Clean numeric columns
-        df['avg_reduction'] = pd.to_numeric(df['avg_reduction'], errors='coerce')
-        df['avg_reduction'] = df['avg_reduction'].clip(-100, 100).fillna(0)
-        
-        # Create performance metrics
+        # Create essential columns
         df['low_adoption_risk'] = (df['avg_reduction'] < 30).astype(int)
         
-        # Filter to Northern Province districts
-        northern_districts = ['Gakenke', 'Musanze', 'Burera', 'Rulindo', 'Nyabihu']
-        df = df[df['district'].isin(northern_districts)].copy()
-        
-        # Create performance categories
-        reduction_min = df['avg_reduction'].min()
-        reduction_max = df['avg_reduction'].max()
-        
-        if reduction_max - reduction_min > 0:
-            bins = np.linspace(reduction_min, reduction_max, 6)
-            labels = ['Very Low', 'Low', 'Moderate', 'Good', 'Excellent']
-            df['performance_category'] = pd.cut(df['avg_reduction'], bins=bins, labels=labels)
-        else:
-            df['performance_category'] = 'Moderate'
-        
         # Calculate fuel savings
-        df['weekly_fuel_saving_kg'] = (
-            df['baseline_fuel_kg_person_week'] * 
-            df['household_size'] * 
-            (df['avg_reduction'] / 100)
+        if 'household_size' in df.columns and 'baseline_fuel_kg_person_week' in df.columns:
+            df['weekly_fuel_saving_kg'] = df['baseline_fuel_kg_person_week'] * df['household_size'] * (df['avg_reduction'] / 100)
+        else:
+            df['weekly_fuel_saving_kg'] = 8 * (df['avg_reduction'] / 100)
+        
+        # Create adoption categories
+        df['adoption_category'] = pd.cut(
+            df['avg_reduction'],
+            bins=[-float('inf'), 30, 50, 70, 85, float('inf')],
+            labels=['Low (<30%)', 'Moderate (30-50%)', 'Good (50-70%)', 'High (70-85%)', 'Excellent (>85%)']
         )
+        
+        # Handle missing geographic data
+        if 'latitude' not in df.columns or 'longitude' not in df.columns:
+            df['latitude'] = -1.4
+            df['longitude'] = 29.7
         
         return df
         
     except Exception as e:
-        st.error(f"❌ Error loading data: {e}")
-        # Create sample data as fallback
-        return create_sample_data()
-
-def create_sample_data():
-    """Create sample data for demonstration."""
-    np.random.seed(42)
-    n = 7976
-    
-    districts = ['Burera', 'Gakenke', 'Musanze', 'Nyabihu', 'Rulindo']
-    
-    data = {
-        'household_id': [f'HH{i:05d}' for i in range(n)],
-        'district': np.random.choice(districts, n, p=[0.2, 0.2, 0.3, 0.15, 0.15]),
-        'avg_reduction': np.random.uniform(-100, 90, n),
-        'distance_to_market_km': np.random.exponential(8, n).clip(0.5, 30),
-        'elevation_m': np.random.uniform(1300, 2900, n),
-        'household_size': np.random.choice([1,2,3,4,5,6,7,8], n, p=[0.05,0.1,0.2,0.25,0.2,0.1,0.05,0.05]),
-        'latitude': np.random.uniform(-1.5, -1.3, n),
-        'longitude': np.random.uniform(29.6, 29.9, n),
-        'baseline_fuel_kg_person_week': np.random.uniform(5, 12, n),
-        'distribution_year': np.random.choice([2023, 2024], n),
-        'distribution_month': np.random.randint(1, 13, n)
-    }
-    
-    df = pd.DataFrame(data)
-    df['low_adoption_risk'] = (df['avg_reduction'] < 30).astype(int)
-    df['weekly_fuel_saving_kg'] = df['baseline_fuel_kg_person_week'] * df['household_size'] * (df['avg_reduction'] / 100)
-    
-    bins = np.linspace(df['avg_reduction'].min(), df['avg_reduction'].max(), 6)
-    labels = ['Very Low', 'Low', 'Moderate', 'Good', 'Excellent']
-    df['performance_category'] = pd.cut(df['avg_reduction'], bins=bins, labels=labels)
-    
-    return df
+        st.error(f"❌ Error loading data: {str(e)}")
+        return pd.DataFrame()
