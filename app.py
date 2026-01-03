@@ -630,7 +630,7 @@ def create_performance_distribution(filtered_df):
     return fig
 
 def create_geographic_map(filtered_df):
-    """Create interactive geographic map with clustering."""
+    """Create interactive geographic map."""
     if len(filtered_df) < 5 or 'latitude' not in filtered_df.columns:
         return create_empty_plot("Geographic data not available")
     
@@ -638,24 +638,19 @@ def create_geographic_map(filtered_df):
     sample_size = min(1000, len(filtered_df))
     sample_df = filtered_df.sample(sample_size, random_state=42)
     
-    # Check if intervention_priority exists
-    hover_data = {
-        "avg_reduction": ":.1f%",
-        "distance_to_market_km": ":.1f km",
-        "elevation_m": ":.0f m"
-    }
-    
-    if 'intervention_priority' in sample_df.columns:
-        hover_data["intervention_priority"] = True
-    
+    # SIMPLE FIX: Use fixed size instead of risk_score
     fig = px.scatter_mapbox(
         sample_df,
         lat="latitude",
         lon="longitude",
         color="avg_reduction",
-        size="risk_score" if 'risk_score' in sample_df.columns else 8,
+        size=8,  # FIXED: Constant size instead of risk_score
         hover_name="district",
-        hover_data=hover_data,
+        hover_data={
+            "avg_reduction": ":.1f%",
+            "distance_to_market_km": ":.1f km",
+            "elevation_m": ":.0f m"
+        },
         color_continuous_scale="RdYlGn",
         size_max=15,
         zoom=8.5,
@@ -672,7 +667,6 @@ def create_geographic_map(filtered_df):
     )
     
     return fig
-
 def create_risk_heatmap(filtered_df):
     """Create risk heatmap by distance and household size."""
     if len(filtered_df) < 10:
