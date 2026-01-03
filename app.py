@@ -1,4 +1,4 @@
-# app.py - Sustainable Cooking Impact Dashboard - ENHANCED VERSION
+# app.py - Sustainable Cooking Impact Dashboard - FINAL VERSION
 # =====================================================
 
 import streamlit as st
@@ -144,16 +144,46 @@ st.markdown("""
         gap: 15px;
     }
     
-    .section-title:before {
-        content: "▶";
-        font-size: 1.2rem;
-        color: #0ea5e9;
-        animation: pulse 2s infinite;
+    .insight-box {
+        margin-bottom: 25px;
+        padding: 20px;
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        border-radius: 16px;
+        border-left: 5px solid #0ea5e9;
     }
     
-    @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.5; }
+    .insight-title {
+        font-weight: 700;
+        color: #0369a1;
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+    }
+    
+    .insight-text {
+        color: #475569;
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+    
+    .guide-box {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(251, 191, 36, 0.1) 100%);
+        padding: 1.8rem;
+        border-radius: 16px;
+        border: 2px solid #f59e0b;
+        margin: 2rem 0;
+    }
+    
+    .guide-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-top: 15px;
+    }
+    
+    .guide-item {
+        background: rgba(255, 255, 255, 0.7);
+        padding: 15px;
+        border-radius: 12px;
     }
     
     .filter-panel {
@@ -165,20 +195,22 @@ st.markdown("""
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
     }
     
-    .user-guide {
-        background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(251, 191, 36, 0.1) 100%);
-        padding: 1.8rem;
-        border-radius: 16px;
-        border: 2px solid #f59e0b;
-        margin: 2rem 0;
-        font-size: 1rem;
+    .status-indicator {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 8px;
+        animation: pulse 2s infinite;
     }
     
-    .user-guide h4 {
-        color: #92400e;
-        margin-bottom: 1rem;
-        font-size: 1.3rem;
-        font-weight: 700;
+    .status-good { background-color: #10b981; }
+    .status-warning { background-color: #f59e0b; }
+    .status-excellent { background-color: #8b5cf6; }
+    
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
     }
     
     /* Enhanced tabs */
@@ -204,40 +236,6 @@ st.markdown("""
         border-color: #0c4a6e !important;
         box-shadow: 0 4px 15px rgba(12, 74, 110, 0.3);
     }
-    
-    /* Custom scrollbar */
-    ::-webkit-scrollbar {
-        width: 10px;
-        height: 10px;
-    }
-    
-    ::-webkit-scrollbar-track {
-        background: #f1f5f9;
-        border-radius: 10px;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-        background: linear-gradient(135deg, #0ea5e9, #8b5cf6);
-        border-radius: 10px;
-    }
-    
-    ::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(135deg, #0c4a6e, #7c3aed);
-    }
-    
-    /* Status indicators */
-    .status-indicator {
-        display: inline-block;
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        margin-right: 8px;
-        animation: pulse 2s infinite;
-    }
-    
-    .status-good { background-color: #10b981; }
-    .status-warning { background-color: #f59e0b; }
-    .status-excellent { background-color: #8b5cf6; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -321,13 +319,6 @@ def load_and_process_data():
             df['latitude'] = -1.4
             df['longitude'] = 29.7
         
-        # Parse distribution date if exists
-        if 'distribution_date' in df.columns:
-            try:
-                df['distribution_date'] = pd.to_datetime(df['distribution_date'], format='%d/%m/%Y', errors='coerce')
-            except:
-                pass
-        
         return df
         
     except Exception as e:
@@ -335,7 +326,7 @@ def load_and_process_data():
         return pd.DataFrame()
 
 # =====================================================
-# ENHANCED PLOT FUNCTIONS WITH BETTER COLORS
+# ENHANCED PLOT FUNCTIONS WITH BETTER VISIBILITY
 # =====================================================
 
 def create_district_performance_chart(df, key_suffix=""):
@@ -353,27 +344,30 @@ def create_district_performance_chart(df, key_suffix=""):
         district_stats = district_stats.sort_values('avg_reduction', ascending=True)
         
         # Create vibrant color gradient
-        colors = px.colors.sequential.Viridis
-        n_districts = len(district_stats)
-        
         fig = go.Figure()
+        
+        # Create custom color scale based on values
+        max_reduction = district_stats['avg_reduction'].max()
+        colors = []
+        for reduction in district_stats['avg_reduction']:
+            if reduction < 30:
+                colors.append('#ef4444')
+            elif reduction < 50:
+                colors.append('#f59e0b')
+            elif reduction < 70:
+                colors.append('#3b82f6')
+            elif reduction < 85:
+                colors.append('#8b5cf6')
+            else:
+                colors.append('#10b981')
         
         fig.add_trace(go.Bar(
             y=district_stats['district'],
             x=district_stats['avg_reduction'],
             orientation='h',
-            marker=dict(
-                color=district_stats['avg_reduction'],
-                colorscale='Viridis',
-                showscale=True,
-                colorbar=dict(
-                    title="Reduction %",
-                    thickness=20,
-                    len=0.8,
-                    x=1.02
-                ),
-                line=dict(color='white', width=1)
-            ),
+            marker_color=colors,
+            marker_line_color='rgba(0,0,0,0.2)',
+            marker_line_width=1,
             text=[f"{x:.1f}%" for x in district_stats['avg_reduction']],
             textposition='auto',
             textfont=dict(color='white', size=12, weight='bold'),
@@ -388,27 +382,28 @@ def create_district_performance_chart(df, key_suffix=""):
         fig.update_layout(
             title=dict(
                 text="🏆 District Performance Ranking",
-                font=dict(size=22, color='#0c4a6e', family="Arial Black"),
+                font=dict(size=22, color='#0c4a6e'),
                 x=0.5,
                 xanchor='center'
             ),
             xaxis_title="Average Fuel Reduction (%)",
             yaxis_title="District",
             height=500,
-            plot_bgcolor='rgba(255,255,255,0.9)',
+            plot_bgcolor='white',
             paper_bgcolor='white',
             showlegend=False,
-            margin=dict(l=0, r=100, t=80, b=0),
+            margin=dict(l=0, r=0, t=80, b=0),
             xaxis=dict(range=[0, max(100, district_stats['avg_reduction'].max() * 1.1)])
         )
         
         return fig
         
     except Exception as e:
+        st.error(f"Error creating district chart: {str(e)}")
         return create_empty_plot("Error creating chart")
 
 def create_adoption_distribution_chart(df, key_suffix=""):
-    """Create adoption category distribution chart with vibrant colors and better range"""
+    """Create adoption category distribution chart with vibrant colors"""
     try:
         if len(df) == 0 or 'adoption_category' not in df.columns:
             return create_empty_plot("No adoption category data available")
@@ -438,8 +433,8 @@ def create_adoption_distribution_chart(df, key_suffix=""):
         ]
         
         # Create the chart with better range
-        max_count = category_counts['Count'].max()
-        x_range = [0, max_count * 1.15]  # Add 15% padding
+        max_count = category_counts['Count'].max() if len(category_counts) > 0 else 1
+        x_range = [0, max_count * 1.2]  # Add 20% padding
         
         fig = go.Figure()
         
@@ -463,14 +458,14 @@ def create_adoption_distribution_chart(df, key_suffix=""):
         fig.update_layout(
             title=dict(
                 text="📊 Adoption Level Distribution",
-                font=dict(size=22, color='#0c4a6e', family="Arial Black"),
+                font=dict(size=22, color='#0c4a6e'),
                 x=0.5,
                 xanchor='center'
             ),
             xaxis_title="Number of Households",
             yaxis_title="Adoption Level",
             height=450,
-            plot_bgcolor='rgba(255,255,255,0.9)',
+            plot_bgcolor='white',
             paper_bgcolor='white',
             showlegend=False,
             margin=dict(l=0, r=0, t=80, b=0),
@@ -480,10 +475,11 @@ def create_adoption_distribution_chart(df, key_suffix=""):
         return fig
         
     except Exception as e:
+        st.error(f"Error creating adoption chart: {str(e)}")
         return create_empty_plot("Error creating chart")
 
 def create_geographic_map(df, key_suffix=""):
-    """Create interactive geographic map with enhanced styling"""
+    """Create interactive geographic map"""
     try:
         if len(df) == 0:
             return create_empty_plot("No data available")
@@ -491,17 +487,13 @@ def create_geographic_map(df, key_suffix=""):
         if 'latitude' not in df.columns or 'longitude' not in df.columns:
             return create_empty_plot("Geographic data not available")
         
-        # Sample data for better performance
-        sample_size = min(1000, len(df))
-        sample_df = df.sample(sample_size, random_state=42).copy()
-        
-        # Create the map with custom color scale
+        # Create the map
         fig = px.scatter_mapbox(
-            sample_df,
+            df,
             lat="latitude",
             lon="longitude",
             color="avg_reduction",
-            hover_name="district" if 'district' in sample_df.columns else None,
+            hover_name="district" if 'district' in df.columns else None,
             hover_data={
                 "avg_reduction": ":.1f",
                 "district": True,
@@ -509,7 +501,7 @@ def create_geographic_map(df, key_suffix=""):
             },
             color_continuous_scale=[[0, '#ef4444'], [0.3, '#f59e0b'], [0.6, '#3b82f6'], [1, '#10b981']],
             range_color=[0, 100],
-            zoom=8.2,
+            zoom=8,
             center={"lat": -1.4, "lon": 29.7},
             height=500,
             title="🗺️ Geographic Distribution of Stove Adoption"
@@ -521,23 +513,23 @@ def create_geographic_map(df, key_suffix=""):
             coloraxis_colorbar=dict(
                 title="Reduction %",
                 thickness=20,
-                len=0.8,
-                x=1.02
+                len=0.8
             )
         )
         
         return fig
         
     except Exception as e:
+        st.error(f"Error creating map: {str(e)}")
         return create_empty_plot("Error creating map")
 
 def create_performance_distribution_chart(df, key_suffix=""):
-    """Create performance distribution histogram with multiple colors"""
+    """Create performance distribution histogram with fixed axis starting at 30%"""
     try:
         if len(df) == 0 or 'avg_reduction' not in df.columns:
             return create_empty_plot("No performance data available")
         
-        # Create histogram with gradient colors
+        # Create histogram
         fig = go.Figure()
         
         # Calculate statistics
@@ -546,13 +538,12 @@ def create_performance_distribution_chart(df, key_suffix=""):
         
         fig.add_trace(go.Histogram(
             x=df['avg_reduction'],
-            nbinsx=40,
+            nbinsx=20,
             marker=dict(
-                color=df['avg_reduction'],
-                colorscale='Rainbow',
+                color='#3b82f6',
                 line=dict(color='white', width=1)
             ),
-            hovertemplate='Reduction: %{x:.1f}%<br>Count: %{y}<extra></extra>',
+            hovertemplate='Reduction: %{x:.1f}%<br>Households: %{y}<extra></extra>',
             name="Households"
         ))
         
@@ -561,36 +552,47 @@ def create_performance_distribution_chart(df, key_suffix=""):
                      annotation_text="Target: 30%", annotation_position="top right")
         
         # Add mean and median lines
-        fig.add_vline(x=mean_val, line_dash="dot", line_color="#3b82f6",
+        fig.add_vline(x=mean_val, line_dash="dot", line_color="#8b5cf6",
                      annotation_text=f"Mean: {mean_val:.1f}%", annotation_position="top left")
         
-        fig.add_vline(x=median_val, line_dash="dot", line_color="#8b5cf6",
+        fig.add_vline(x=median_val, line_dash="dot", line_color="#10b981",
                      annotation_text=f"Median: {median_val:.1f}%", annotation_position="top left")
+        
+        # Set x-axis to start at 30% with 10% intervals
+        min_val = max(30, df['avg_reduction'].min() * 0.9)  # Start at 30 or 90% of min
+        max_val = min(100, df['avg_reduction'].max() * 1.1)  # End at 100 or 110% of max
         
         fig.update_layout(
             title=dict(
                 text="📈 Performance Distribution Analysis",
-                font=dict(size=22, color='#0c4a6e', family="Arial Black"),
+                font=dict(size=22, color='#0c4a6e'),
                 x=0.5,
                 xanchor='center'
             ),
             xaxis_title="Fuel Reduction (%)",
             yaxis_title="Number of Households",
             height=500,
-            plot_bgcolor='rgba(255,255,255,0.9)',
+            plot_bgcolor='white',
             paper_bgcolor='white',
             bargap=0.05,
             margin=dict(l=0, r=0, t=80, b=0),
-            showlegend=False
+            showlegend=False,
+            xaxis=dict(
+                range=[min_val, max_val],
+                dtick=10,  # Set interval to 10%
+                tick0=30,  # Start ticks at 30%
+                tickmode="linear"
+            )
         )
         
         return fig
         
     except Exception as e:
+        st.error(f"Error creating performance chart: {str(e)}")
         return create_empty_plot("Error creating chart")
 
 def create_usage_trends_chart(df, key_suffix=""):
-    """Create monthly usage trends chart with enhanced styling"""
+    """Create monthly usage trends chart"""
     try:
         if len(df) == 0:
             return create_empty_plot("No data available")
@@ -601,42 +603,39 @@ def create_usage_trends_chart(df, key_suffix=""):
         if usage_cols and len(usage_cols) >= 1:
             months = list(range(1, len(usage_cols) + 1))
             monthly_avg = []
-            monthly_std = []
             
             for col in usage_cols:
                 monthly_avg.append(df[col].mean())
-                monthly_std.append(df[col].std())
             
             month_names = [f'Month {i}' for i in months]
             
-            # Create the chart with gradient line
+            # Create the chart
             fig = go.Figure()
             
-            # Main line with gradient
             fig.add_trace(go.Scatter(
                 x=month_names,
                 y=monthly_avg,
                 mode='lines+markers',
-                line=dict(color='linear-gradient(90deg, #3b82f6, #8b5cf6)', width=4),
-                marker=dict(size=12, color='white', 
+                line=dict(color='#3b82f6', width=4),
+                marker=dict(size=10, color='white', 
                           line=dict(width=3, color='#3b82f6')),
                 name='Average Usage',
                 hovertemplate='%{x}<br>Avg Usage: %{y:.1f} kg<extra></extra>',
                 fill='tozeroy',
-                fillcolor='rgba(59, 130, 246, 0.15)'
+                fillcolor='rgba(59, 130, 246, 0.1)'
             ))
             
             fig.update_layout(
                 title=dict(
                     text="📅 Monthly Fuel Usage Trends",
-                    font=dict(size=22, color='#0c4a6e', family="Arial Black"),
+                    font=dict(size=22, color='#0c4a6e'),
                     x=0.5,
                     xanchor='center'
                 ),
                 xaxis_title="Month",
                 yaxis_title="Average Fuel Usage (kg)",
-                height=500,
-                plot_bgcolor='rgba(255,255,255,0.9)',
+                height=450,
+                plot_bgcolor='white',
                 paper_bgcolor='white',
                 showlegend=False,
                 margin=dict(l=0, r=0, t=80, b=0)
@@ -647,10 +646,11 @@ def create_usage_trends_chart(df, key_suffix=""):
             return create_empty_plot("No monthly usage data available")
         
     except Exception as e:
+        st.error(f"Error creating usage chart: {str(e)}")
         return create_empty_plot("Error creating chart")
 
 def create_savings_analysis_chart(df, key_suffix=""):
-    """Create fuel savings analysis by district with enhanced colors"""
+    """Create fuel savings analysis by district"""
     try:
         if len(df) == 0 or 'district' not in df.columns:
             return create_empty_plot("No district data available")
@@ -665,19 +665,15 @@ def create_savings_analysis_chart(df, key_suffix=""):
         savings_data['weekly_fuel_saving_tons'] = savings_data['weekly_fuel_saving_kg'] / 1000
         savings_data = savings_data.sort_values('weekly_fuel_saving_tons', ascending=True)
         
-        # Create the chart with gradient colors
+        # Create the chart
         fig = go.Figure()
-        
-        # Use sequential colors
-        colors = px.colors.sequential.Sunset
         
         fig.add_trace(go.Bar(
             y=savings_data['district'],
             x=savings_data['weekly_fuel_saving_tons'],
             orientation='h',
             marker=dict(
-                color=savings_data['weekly_fuel_saving_tons'],
-                colorscale='Sunset',
+                color='#f59e0b',
                 line=dict(color='white', width=1)
             ),
             text=[f"{x:,.1f}t" for x in savings_data['weekly_fuel_saving_tons']],
@@ -691,14 +687,14 @@ def create_savings_analysis_chart(df, key_suffix=""):
         fig.update_layout(
             title=dict(
                 text="💰 Weekly Fuel Savings by District",
-                font=dict(size=22, color='#0c4a6e', family="Arial Black"),
+                font=dict(size=22, color='#0c4a6e'),
                 x=0.5,
                 xanchor='center'
             ),
             xaxis_title="Weekly Savings (tons)",
             yaxis_title="District",
-            height=500,
-            plot_bgcolor='rgba(255,255,255,0.9)',
+            height=450,
+            plot_bgcolor='white',
             paper_bgcolor='white',
             showlegend=False,
             margin=dict(l=0, r=0, t=80, b=0)
@@ -707,10 +703,11 @@ def create_savings_analysis_chart(df, key_suffix=""):
         return fig
         
     except Exception as e:
+        st.error(f"Error creating savings chart: {str(e)}")
         return create_empty_plot("Error creating chart")
 
 def create_impact_analysis_chart(df, key_suffix=""):
-    """Create environmental and economic impact analysis with vibrant colors"""
+    """Create environmental and economic impact analysis"""
     try:
         if len(df) == 0:
             return create_empty_plot("No data available")
@@ -737,7 +734,7 @@ def create_impact_analysis_chart(df, key_suffix=""):
                  weekly_cost_savings, annual_economic]
         units = ['tons', 'tons', 'trees', 'USD', 'USD']
         
-        # Vibrant rainbow color palette
+        # Color palette
         colors = ['#3b82f6', '#10b981', '#059669', '#f59e0b', '#8b5cf6']
         
         # Create the chart
@@ -759,14 +756,14 @@ def create_impact_analysis_chart(df, key_suffix=""):
         fig.update_layout(
             title=dict(
                 text="🌍 Environmental & Economic Impact Analysis",
-                font=dict(size=22, color='#0c4a6e', family="Arial Black"),
+                font=dict(size=22, color='#0c4a6e'),
                 x=0.5,
                 xanchor='center'
             ),
             xaxis_title="Impact Type",
             yaxis_title="Value",
-            height=550,
-            plot_bgcolor='rgba(255,255,255,0.9)',
+            height=500,
+            plot_bgcolor='white',
             paper_bgcolor='white',
             xaxis_tickangle=-30,
             margin=dict(l=0, r=0, t=80, b=50),
@@ -776,6 +773,7 @@ def create_impact_analysis_chart(df, key_suffix=""):
         return fig
         
     except Exception as e:
+        st.error(f"Error creating impact chart: {str(e)}")
         return create_empty_plot("Error creating chart")
 
 def create_empty_plot(message):
@@ -804,10 +802,7 @@ df = load_and_process_data()
 
 if df.empty:
     st.error("""
-    ❌ Could not load the data file. Please ensure:
-    1. The file 'delagua_stove_data_cleaned.csv' exists in the root folder
-    2. The file contains valid CSV data
-    3. You have read permissions for the file
+    ❌ Could not load the data file. Please ensure the data file exists in the correct location.
     """)
     st.stop()
 
@@ -827,7 +822,7 @@ st.markdown(f"""
 <div class="main-header">
     <h1>🔥 Sustainable Cooking Impact Dashboard</h1>
     <p style="margin: 0; font-size: 1.3rem; opacity: 0.95; font-weight: 500; letter-spacing: 0.5px;">
-        DelAgua Stove Programme Analysis • {total_households:,} Households • 5 Districts
+        DelAgua Stove Programme Analysis • {total_households:,} Households • {len(districts)} Districts
     </p>
     <div style="display: flex; justify-content: center; gap: 25px; margin-top: 20px; flex-wrap: wrap;">
         <div style="background: rgba(255, 255, 255, 0.25); padding: 10px 22px; border-radius: 25px; font-size: 1rem; backdrop-filter: blur(10px);">
@@ -847,27 +842,28 @@ st.markdown(f"""
 # USER GUIDE
 # =====================================================
 st.markdown("""
-<div class="user-guide">
-    <h4>🚀 How to Use This Dashboard</h4>
-    <p>Welcome to the DelAgua Stove Impact Analytics Platform! Follow these steps to explore insights:</p>
-    
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 15px;">
-        <div style="background: rgba(255, 255, 255, 0.5); padding: 15px; border-radius: 12px;">
+<div class="guide-box">
+    <h4 style="color: #92400e; margin-bottom: 1rem; font-size: 1.3rem; font-weight: 700;">🚀 How to Use This Dashboard</h4>
+    <p style="color: #475569; font-size: 1rem; margin-bottom: 15px;">
+        Welcome to the DelAgua Stove Impact Analytics Platform! Follow these steps to explore insights:
+    </p>
+    <div class="guide-grid">
+        <div class="guide-item">
             <strong>1️⃣ Filter Data</strong>
             <p style="margin: 8px 0 0 0; font-size: 0.95rem; color: #475569;">
                 Use the left panel to select specific districts and adjust the reduction range slider.
             </p>
         </div>
-        <div style="background: rgba(255, 255, 255, 0.5); padding: 15px; border-radius: 12px;">
+        <div class="guide-item">
             <strong>2️⃣ Explore Tabs</strong>
             <p style="margin: 8px 0 0 0; font-size: 0.95rem; color: #475569;">
                 Click on each tab below to dive into different aspects of stove adoption analysis.
             </p>
         </div>
-        <div style="background: rgba(255, 255, 255, 0.5); padding: 15px; border-radius: 12px;">
+        <div class="guide-item">
             <strong>3️⃣ Interact with Charts</strong>
             <p style="margin: 8px 0 0 0; font-size: 0.95rem; color: #475569;">
-                Hover over charts for detailed tooltips, zoom in/out, and click on legend items to filter.
+                Hover over charts for detailed tooltips, zoom in/out, and explore data insights.
             </p>
         </div>
     </div>
@@ -875,11 +871,11 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =====================================================
-# ENHANCED METRICS CARDS WITH VIBRANT COLORS
+# ENHANCED METRICS CARDS
 # =====================================================
 st.markdown("<div class='section-title'>📊 Key Performance Indicators</div>", unsafe_allow_html=True)
 
-# Create 4 columns for metrics with different colors
+# Create 4 columns for metrics
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
@@ -922,7 +918,7 @@ with col3:
     """, unsafe_allow_html=True)
 
 with col4:
-    # Calculate excellent adoption rate instead of high risk
+    # Calculate excellent adoption rate
     excellent_adoption = (df['avg_reduction'] > 85).sum() if 'avg_reduction' in df.columns else 0
     excellent_rate = (excellent_adoption / total_households * 100) if total_households > 0 else 0
     
@@ -959,7 +955,7 @@ with col_left:
     else:
         selected_districts = []
     
-    # Risk level filter
+    # Performance filter
     risk_filter = st.selectbox(
         "Performance Filter",
         options=["All Households", "Low Performance (<30%)", "High Performance (≥30%)"],
@@ -971,14 +967,9 @@ with col_left:
         min_reduction = float(df['avg_reduction'].min())
         max_reduction = float(df['avg_reduction'].max())
         
-        # Ensure min and max are different for slider
         if min_reduction == max_reduction:
-            if min_reduction == 0:
-                min_reduction = 0
-                max_reduction = 100
-            else:
-                min_reduction = max(0, min_reduction - 5)
-                max_reduction = min_reduction + 10
+            min_reduction = 0
+            max_reduction = 100
         
         reduction_range = st.slider(
             "Fuel Reduction Range (%)",
@@ -1005,7 +996,7 @@ with col_left:
             • <strong>Program Scale:</strong> {total_households:,} households<br>
             • <strong>Geographic Coverage:</strong> {len(districts)} districts<br>
             • <strong>Average Performance:</strong> {avg_reduction_val:.1f}% reduction<br>
-            • <strong>Data Quality:</strong> 100% complete
+            • <strong>Data Completeness:</strong> 100% verified
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -1068,20 +1059,19 @@ with col_main:
         st.markdown(f"""
         <div style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); 
                     padding: 15px 20px; border-radius: 12px; border-left: 5px solid #3b82f6; 
-                    margin-bottom: 25px; display: flex; align-items: center; gap: 15px;">
-            <div style="font-size: 1.8rem;">📊</div>
-            <div>
-                <div style="font-weight: 700; color: #1e40af; font-size: 1.1rem;">Active Filters Applied</div>
-                <div style="color: #475569; font-size: 0.95rem;">
-                    Showing {filtered_count:,} households ({filtered_count/len(df)*100:.1f}% of total)
-                    {f"• {len(selected_districts)} districts selected" if selected_districts else ""}
-                    {f"• Reduction: {reduction_range[0]:.1f}% to {reduction_range[1]:.1f}%" if 'avg_reduction' in df.columns else ""}
-                </div>
+                    margin-bottom: 25px;">
+            <div style="font-weight: 700; color: #1e40af; font-size: 1.1rem; margin-bottom: 5px;">
+                📊 Active Filters Applied
+            </div>
+            <div style="color: #475569; font-size: 0.95rem;">
+                Showing {filtered_count:,} households ({filtered_count/len(df)*100:.1f}% of total)
+                {f"• {len(selected_districts)} districts selected" if selected_districts else ""}
+                {f"• Reduction range: {reduction_range[0]:.1f}% to {reduction_range[1]:.1f}%" if 'avg_reduction' in df.columns else ""}
             </div>
         </div>
         """, unsafe_allow_html=True)
     
-    # CREATE TABS WITH ICONS
+    # CREATE TABS
     tab1, tab2, tab3, tab4, tab5 = st.tabs([
         "🏘️ District Insights",
         "🗺️ Geographic Analysis", 
@@ -1093,12 +1083,9 @@ with col_main:
     # TAB 1: DISTRICT INSIGHTS
     with tab1:
         st.markdown("""
-        <div style="margin-bottom: 25px; padding: 20px; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); 
-                    border-radius: 16px; border-left: 5px solid #0ea5e9;">
-            <div style="font-weight: 700; color: #0369a1; font-size: 1.1rem; margin-bottom: 8px;">
-                💡 District Performance Insights
-            </div>
-            <div style="color: #475569; font-size: 0.95rem;">
+        <div class="insight-box">
+            <div class="insight-title">💡 District Performance Insights</div>
+            <div class="insight-text">
                 Compare stove adoption performance across districts. Green bars indicate high fuel reduction,
                 while shorter bars may need additional support. Hover over bars for detailed statistics.
             </div>
@@ -1129,12 +1116,9 @@ with col_main:
     # TAB 2: GEOGRAPHIC ANALYSIS
     with tab2:
         st.markdown("""
-        <div style="margin-bottom: 25px; padding: 20px; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); 
-                    border-radius: 16px; border-left: 5px solid #0ea5e9;">
-            <div style="font-weight: 700; color: #0369a1; font-size: 1.1rem; margin-bottom: 8px;">
-                💡 Geographic Distribution Insights
-            </div>
-            <div style="color: #475569; font-size: 0.95rem;">
+        <div class="insight-box">
+            <div class="insight-title">💡 Geographic Distribution Insights</div>
+            <div class="insight-text">
                 Explore the spatial distribution of stove adoption. Green dots show high-performing areas,
                 while red dots indicate areas needing attention. Zoom in/out to explore different regions.
             </div>
@@ -1147,7 +1131,7 @@ with col_main:
         st.plotly_chart(fig_map, use_container_width=True, key="tab2_geographic_map")
         st.markdown("</div>", unsafe_allow_html=True)
         
-        # Geographic metrics in two columns
+        # Geographic metrics
         col_geo1, col_geo2 = st.columns(2)
         
         with col_geo1:
@@ -1174,16 +1158,10 @@ with col_main:
                 col_risk1, col_risk2 = st.columns(2)
                 with col_risk1:
                     st.metric("Low Performance", f"{high_risk:,}", 
-                             f"{high_risk/filtered_count*100:.1f}%", delta_color="inverse")
+                             f"{high_risk/filtered_count*100:.1f}%" if filtered_count > 0 else "0%", delta_color="inverse")
                 with col_risk2:
                     st.metric("High Performance", f"{low_risk:,}", 
-                             f"{low_risk/filtered_count*100:.1f}%", delta_color="normal")
-                
-                # Fixed progress bar - no division by 100
-                risk_percentage = high_risk/filtered_count*100 if filtered_count > 0 else 0
-                progress_value = (100 - risk_percentage)/100
-                st.progress(progress_value if progress_value <= 1 else 1.0, 
-                           text=f"Performance Score: {100-risk_percentage:.1f}%")
+                             f"{low_risk/filtered_count*100:.1f}%" if filtered_count > 0 else "0%", delta_color="normal")
             else:
                 st.info("🎯 Performance data not available")
             st.markdown("</div>", unsafe_allow_html=True)
@@ -1191,14 +1169,12 @@ with col_main:
     # TAB 3: PERFORMANCE METRICS
     with tab3:
         st.markdown("""
-        <div style="margin-bottom: 25px; padding: 20px; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); 
-                    border-radius: 16px; border-left: 5px solid #0ea5e9;">
-            <div style="font-weight: 700; color: #0369a1; font-size: 1.1rem; margin-bottom: 8px;">
-                💡 Performance Distribution Insights
-            </div>
-            <div style="color: #475569; font-size: 0.95rem;">
-                Analyze the distribution of fuel reduction percentages. A right-skewed distribution indicates
-                successful adoption. The vertical lines show target (red), mean (blue), and median (purple) values.
+        <div class="insight-box">
+            <div class="insight-title">💡 Performance Distribution Insights</div>
+            <div class="insight-text">
+                Analyze the distribution of fuel reduction percentages. The histogram shows performance
+                across all households. Vertical lines indicate target (30%), mean, and median values.
+                X-axis starts at 30% with 10% intervals for better visibility.
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -1225,7 +1201,7 @@ with col_main:
                 st.metric("Mean Reduction", f"{mean_val:.1f}%", delta_color="off")
                 st.metric("Median Reduction", f"{median_val:.1f}%", delta_color="off")
                 st.metric("Interquartile Range", f"{q25:.1f}% - {q75:.1f}%", delta_color="off")
-                st.metric("Variability (Std Dev)", f"{std_val:.1f}%", delta_color="off")
+                st.metric("Variability", f"{std_val:.1f}%", delta_color="off")
             else:
                 st.info("📈 Performance data not available")
             st.markdown("</div>", unsafe_allow_html=True)
@@ -1240,17 +1216,10 @@ with col_main:
                 col_target1, col_target2 = st.columns(2)
                 with col_target1:
                     st.metric("Above Target", f"{above_target:,}", 
-                             f"{above_target/filtered_count*100:.1f}%", delta_color="normal")
+                             f"{above_target/filtered_count*100:.1f}%" if filtered_count > 0 else "0%", delta_color="normal")
                 with col_target2:
                     st.metric("Below Target", f"{below_target:,}", 
-                             f"{below_target/filtered_count*100:.1f}%", delta_color="inverse")
-                
-                # Target gap analysis
-                gap_to_target = 30 - filtered_df['avg_reduction'].mean()
-                if gap_to_target > 0:
-                    st.metric("Gap to Target", f"{gap_to_target:.1f}%", "Need improvement", delta_color="inverse")
-                else:
-                    st.metric("Above Target", f"{-gap_to_target:.1f}%", "Excellent!", delta_color="normal")
+                             f"{below_target/filtered_count*100:.1f}%" if filtered_count > 0 else "0%", delta_color="inverse")
             else:
                 st.info("🎯 Target achievement data not available")
             st.markdown("</div>", unsafe_allow_html=True)
@@ -1258,12 +1227,9 @@ with col_main:
     # TAB 4: USAGE TRENDS
     with tab4:
         st.markdown("""
-        <div style="margin-bottom: 25px; padding: 20px; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); 
-                    border-radius: 16px; border-left: 5px solid #0ea5e9;">
-            <div style="font-weight: 700; color: #0369a1; font-size: 1.1rem; margin-bottom: 8px;">
-                💡 Usage Trend Insights
-            </div>
-            <div style="color: #475569; font-size: 0.95rem;">
+        <div class="insight-box">
+            <div class="insight-title">💡 Usage Trend Insights</div>
+            <div class="insight-text">
                 Track monthly fuel usage patterns over time. A downward trend indicates sustained adoption,
                 while an upward trend may suggest declining usage. The shaded area shows data variability.
             </div>
@@ -1314,10 +1280,11 @@ with col_main:
                 current_avg = filtered_df['avg_reduction'].mean()
                 
                 # Show monitoring duration
+                usage_cols = [col for col in filtered_df.columns if 'usage_month' in col]
                 if usage_cols and len(usage_cols) >= 1:
                     st.metric("Monitoring Period", f"{len(usage_cols)} months", delta_color="off")
                 
-                # Performance rating with emoji
+                # Performance rating
                 if current_avg >= 85:
                     rating = "🏆 EXCELLENT"
                     rating_color = "#10b981"
@@ -1335,7 +1302,6 @@ with col_main:
                     rating_color = "#dc2626"
                 
                 st.metric("Current Rating", rating, f"{current_avg:.1f}% reduction", delta_color="off")
-                st.metric("Data Points", f"{filtered_count:,}", "households analyzed", delta_color="off")
             else:
                 st.info("📊 Reduction metrics not available")
             st.markdown("</div>", unsafe_allow_html=True)
@@ -1343,12 +1309,9 @@ with col_main:
     # TAB 5: IMPACT ANALYSIS
     with tab5:
         st.markdown("""
-        <div style="margin-bottom: 25px; padding: 20px; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); 
-                    border-radius: 16px; border-left: 5px solid #0ea5e9;">
-            <div style="font-weight: 700; color: #0369a1; font-size: 1.1rem; margin-bottom: 8px;">
-                💡 Impact Analysis Insights
-            </div>
-            <div style="color: #475569; font-size: 0.95rem;">
+        <div class="insight-box">
+            <div class="insight-title">💡 Impact Analysis Insights</div>
+            <div class="insight-text">
                 Quantify the environmental and economic benefits of the stove adoption program. 
                 These metrics demonstrate the program's value to stakeholders, funders, and the community.
             </div>
@@ -1381,8 +1344,6 @@ with col_main:
                      f"Equivalent to {annual_co2/2:,.0f} cars off-road", delta_color="off")
             st.metric("Trees Protected", f"{trees_saved:,.0f} annually", 
                      f"Preserves {trees_saved/100:,.1f} acres forest", delta_color="off")
-            st.metric("Health Improvement", "SIGNIFICANT", 
-                     "Reduced respiratory issues", delta_color="off")
             st.markdown("</div>", unsafe_allow_html=True)
         
         with col_imp2:
@@ -1399,13 +1360,11 @@ with col_main:
             weekly_wage = weekly_time * 0.5
             
             st.metric("Weekly Cost Savings", f"${weekly_cost:,.0f}", 
-                     f"${weekly_cost/total_hh:.1f} per household", delta_color="off")
+                     f"${weekly_cost/total_hh:.1f} per household" if total_hh > 0 else "$0", delta_color="off")
             st.metric("Time Saved Weekly", f"{weekly_time:,.0f} hours", 
-                     f"{weekly_time/total_hh:.1f} hours/household", delta_color="off")
-            st.metric("Productivity Gain", f"${weekly_wage:,.0f}/week", 
-                     "Equivalent wage savings", delta_color="off")
+                     f"{weekly_time/total_hh:.1f} hours/household" if total_hh > 0 else "0", delta_color="off")
             st.metric("Annual Economic Value", f"${weekly_wage * 52:,.0f}", 
-                     f"{(weekly_wage * 52)/(total_hh*50):.1f}x ROI", delta_color="off")
+                     f"{(weekly_wage * 52)/(total_hh*50):.1f}x ROI" if total_hh > 0 else "0", delta_color="off")
             st.markdown("</div>", unsafe_allow_html=True)
 
 # =====================================================
@@ -1419,14 +1378,13 @@ st.markdown(f"""
             🔥 Sustainable Cooking Impact Dashboard
         </div>
         <div style="font-size: 0.95rem; opacity: 0.9; margin-bottom: 0.5rem;">
-            DelAgua Stove Adoption Programme • Rwanda • 5 Districts
+            DelAgua Stove Adoption Programme • Rwanda • {len(districts)} Districts
         </div>
         <div style="font-size: 0.85rem; opacity: 0.7; margin-bottom: 1.2rem;">
-            Data Source: delagua_stove_data_cleaned.csv • {total_households:,} households • 
-            Analysis Period: {datetime.now().strftime('%B %Y')}
+            Field Data Collection • {total_households:,} households • Analysis Period: {datetime.now().strftime('%B %Y')}
         </div>
         <div style="font-size: 0.75rem; opacity: 0.6; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 1rem;">
-            Built with Streamlit • Professional Analytics Dashboard v3.0 • 
+            Built with Streamlit • Professional Analytics Dashboard • 
             Technical Support: sniyizurugero@aimsric.org
         </div>
     </div>
