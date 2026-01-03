@@ -202,6 +202,16 @@ st.markdown("""
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     }
     
+    /* Feature highlight container */
+    .featured-plot-container {
+        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+        padding: 2rem;
+        border-radius: 16px;
+        border: 2px solid #e2e8f0;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+    
     /* Status indicators */
     .status-indicator {
         display: inline-flex;
@@ -299,6 +309,54 @@ st.markdown("""
     .quality-warning {
         background: #fef3c7;
         color: #92400e;
+    }
+    
+    /* Featured insight box */
+    .featured-insight {
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        border-left: 5px solid #0ea5e9;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin: 1rem 0;
+    }
+    
+    /* District ranking styles */
+    .district-ranking {
+        padding: 0.75rem;
+        border-radius: 8px;
+        margin: 0.5rem 0;
+        transition: all 0.2s ease;
+    }
+    
+    .district-ranking:hover {
+        transform: translateX(5px);
+        background: #f1f5f9;
+    }
+    
+    .district-rank-1 {
+        background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+        border-left: 4px solid #16a34a;
+    }
+    
+    .district-rank-2 {
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        border-left: 4px solid #0ea5e9;
+    }
+    
+    .district-rank-3 {
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        border-left: 4px solid #f59e0b;
+    }
+    
+    .district-rank-4 {
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        border-left: 4px solid #f59e0b;
+        opacity: 0.8;
+    }
+    
+    .district-rank-5 {
+        background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+        border-left: 4px solid #ef4444;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -548,7 +606,7 @@ def create_district_comparison(filtered_df):
         fig.add_vline(x=30, line_dash="dash", line_color="red", opacity=0.7)
         
         fig.update_layout(
-            height=400,
+            height=500,
             title='District Performance Ranking',
             plot_bgcolor='white',
             paper_bgcolor='white',
@@ -867,7 +925,7 @@ def create_intervention_priority(filtered_df):
         return create_empty_plot(f"Error creating priority chart: {str(e)}")
 
 # =====================================================
-# DASHBOARD LAYOUT - COMPLETE REBUILD
+# DASHBOARD LAYOUT - COMPLETE REBUILD WITH FEATURED PLOT FIRST
 # =====================================================
 
 # Load and process data
@@ -916,7 +974,77 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# Main layout
+# MAIN LAYOUT REVAMP: Featured Plot FIRST, then filters
+col_main_full = st.columns([1])
+
+with col_main_full[0]:
+    # FEATURED DISTRICT PERFORMANCE PLOT - FIRST VIEW
+    st.markdown("""
+    <div class="featured-plot-container">
+        <h2 style="color: #0c4a6e; margin-top: 0; text-align: center; margin-bottom: 1.5rem;">
+            🏆 District Performance Dashboard
+        </h2>
+        <p style="text-align: center; color: #475569; margin-bottom: 1.5rem; font-size: 1.1rem;">
+            Interactive ranking of districts by fuel reduction performance (target: 30%)
+        </p>
+    """, unsafe_allow_html=True)
+    
+    # Create initial district comparison with all data
+    district_fig = create_district_comparison(df)
+    st.plotly_chart(district_fig, use_container_width=True)
+    
+    # Add key insights below the featured plot
+    if len(df) > 0 and 'district' in df.columns:
+        district_stats = df.groupby('district').agg({
+            'avg_reduction': 'mean',
+            'low_adoption_risk': 'mean',
+            'household_id': 'count'
+        }).reset_index()
+        
+        if len(district_stats) > 0:
+            district_stats = district_stats.sort_values('avg_reduction', ascending=False)
+            
+            st.markdown("""
+            <div class="featured-insight">
+                <h4 style="margin-top: 0; color: #0c4a6e;">🎯 Key District Insights</h4>
+            """, unsafe_allow_html=True)
+            
+            # Create 3 columns for top performers
+            col_ins1, col_ins2, col_ins3 = st.columns(3)
+            
+            with col_ins1:
+                if len(district_stats) > 0:
+                    top_district = district_stats.iloc[0]
+                    st.metric(
+                        f"🏆 Top Performer",
+                        f"{top_district['district']}",
+                        f"{top_district['avg_reduction']:.1f}% reduction"
+                    )
+            
+            with col_ins2:
+                if len(district_stats) > 1:
+                    mid_district = district_stats.iloc[len(district_stats)//2]
+                    st.metric(
+                        f"📊 Middle Performer",
+                        f"{mid_district['district']}",
+                        f"{mid_district['avg_reduction']:.1f}% reduction"
+                    )
+            
+            with col_ins3:
+                if len(district_stats) > 2:
+                    bottom_district = district_stats.iloc[-1]
+                    st.metric(
+                        f"🚨 Needs Support",
+                        f"{bottom_district['district']}",
+                        f"{bottom_district['avg_reduction']:.1f}% reduction",
+                        delta_color="inverse"
+                    )
+            
+            st.markdown("</div>", unsafe_allow_html=True)
+    
+    st.markdown("</div>", unsafe_allow_html=True)
+
+# Now create a two-column layout for the rest
 col_left, col_main = st.columns([1, 3])
 
 with col_left:
@@ -928,7 +1056,8 @@ with col_left:
         selected_districts = st.multiselect(
             "Select Districts",
             options=districts_clean,
-            default=districts_clean[:3] if len(districts_clean) >= 3 else districts_clean
+            default=districts_clean[:3] if len(districts_clean) >= 3 else districts_clean,
+            help="Filter data by district"
         )
     else:
         selected_districts = []
@@ -937,13 +1066,15 @@ with col_left:
     risk_level = st.selectbox(
         "Risk Level",
         options=["All", "High Risk (<30%)", "Low Risk (≥30%)"],
-        index=0
+        index=0,
+        help="Filter by adoption risk level"
     )
     
     performance_level = st.selectbox(
         "Performance Category",
         options=["All", "Very Low", "Low", "Moderate", "Good", "Excellent"],
-        index=0
+        index=0,
+        help="Filter by performance category"
     )
     
     if 'avg_reduction' in df.columns:
@@ -952,7 +1083,8 @@ with col_left:
             min_value=float(df['avg_reduction'].min()),
             max_value=float(df['avg_reduction'].max()),
             value=(float(df['avg_reduction'].min()), float(df['avg_reduction'].max())),
-            step=5.0
+            step=5.0,
+            help="Filter by fuel reduction percentage"
         )
     else:
         reduction_range = (0, 100)
@@ -964,11 +1096,15 @@ with col_left:
             min_value=float(df['distance_to_market_km'].min()),
             max_value=float(df['distance_to_market_km'].max()),
             value=(float(df['distance_to_market_km'].min()), float(df['distance_to_market_km'].max())),
-            step=0.5
+            step=0.5,
+            help="Filter by distance to nearest market"
         )
     else:
         distance_range = (0, 25)
         st.warning("No distance data available")
+    
+    # Apply filters button
+    apply_filters = st.button("🔍 Apply Filters", type="primary", use_container_width=True)
     
     st.markdown('</div>', unsafe_allow_html=True)
     
@@ -1004,6 +1140,54 @@ with col_left:
     3. Household size
     """)
     st.markdown('</div>', unsafe_allow_html=True)
+    
+    # Top 5 District Ranking
+    if 'district' in df.columns and len(df) > 0:
+        st.markdown('<div class="left-panel">', unsafe_allow_html=True)
+        st.markdown("### 🏅 Top 5 Districts")
+        
+        district_summary = df.groupby('district').agg({
+            'avg_reduction': 'mean',
+            'household_id': 'count'
+        }).reset_index()
+        
+        district_summary = district_summary.sort_values('avg_reduction', ascending=False).head(5)
+        
+        for i, (idx, row) in enumerate(district_summary.iterrows(), 1):
+            reduction = row['avg_reduction']
+            households = row['household_id']
+            
+            # Determine rank class
+            if i == 1:
+                rank_class = "district-rank-1"
+                icon = "🥇"
+            elif i == 2:
+                rank_class = "district-rank-2"
+                icon = "🥈"
+            elif i == 3:
+                rank_class = "district-rank-3"
+                icon = "🥉"
+            else:
+                rank_class = "district-rank-4"
+                icon = f"{i}."
+            
+            st.markdown(f"""
+            <div class="district-ranking {rank_class}">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="font-weight: 600; font-size: 1rem;">
+                        {icon} {row['district']}
+                    </div>
+                    <div style="font-weight: bold; color: {'#059669' if reduction >= 30 else '#f59e0b'};">
+                        {reduction:.1f}%
+                    </div>
+                </div>
+                <div style="font-size: 0.85rem; color: #64748b; margin-top: 0.25rem;">
+                    {households:,} households
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        st.markdown('</div>', unsafe_allow_html=True)
 
 # Apply filters
 if len(selected_districts) == 0 or len(df) == 0:
@@ -1035,179 +1219,127 @@ else:
         ]
 
 with col_main:
-    # Executive Summary
-    st.markdown("<div class='section-title'>📊 Executive Overview</div>", unsafe_allow_html=True)
-    
+    # Show filter status
     if len(filtered_df) == 0:
-        st.error("No households match your filter criteria. Please adjust filters.")
-    else:
-        # Calculate filtered metrics
-        filtered_total = len(filtered_df)
+        st.warning("⚠️ No households match your filter criteria. Showing all data instead.")
+        filtered_df = df.copy()
+    
+    filtered_total = len(filtered_df)
+    
+    # Metrics for filtered data
+    st.markdown("<div class='section-title'>📊 Filtered Analysis</div>", unsafe_allow_html=True)
+    
+    # Top metrics row for filtered data
+    col1a, col2a, col3a, col4a = st.columns(4)
+    
+    with col1a:
         filtered_avg_reduction = filtered_df['avg_reduction'].mean() if 'avg_reduction' in filtered_df.columns else 0
+        st.markdown(f"""
+        <div class="metric-card-blue">
+            <div class="metric-label">📊 Filtered Data</div>
+            <div class="metric-number">{filtered_total:,}</div>
+            <div class="metric-label">households selected</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2a:
+        filtered_avg_reduction = filtered_df['avg_reduction'].mean() if 'avg_reduction' in filtered_df.columns else 0
+        reduction_status = "status-good" if filtered_avg_reduction >= 30 else "status-warning"
+        reduction_icon = "✅" if filtered_avg_reduction >= 30 else "⚠️"
+        st.markdown(f"""
+        <div class="metric-card-green">
+            <div class="metric-label">📉 Avg Reduction</div>
+            <div class="metric-number">{filtered_avg_reduction:.1f}%</div>
+            <div class="metric-status {reduction_status}">
+                {reduction_icon} {'Above' if filtered_avg_reduction >= 30 else 'Below'} target
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col3a:
         filtered_high_risk = filtered_df['low_adoption_risk'].sum() if 'low_adoption_risk' in filtered_df.columns else 0
         filtered_success_rate = ((filtered_total - filtered_high_risk) / filtered_total * 100) if filtered_total > 0 else 0
         
-        # Top metrics row
-        col1a, col2a, col3a, col4a = st.columns(4)
+        if filtered_success_rate >= 70:
+            success_status = "status-good"
+            success_text = "Excellent"
+            success_icon = "✅"
+        elif filtered_success_rate >= 50:
+            success_status = "status-warning"
+            success_text = "Good"
+            success_icon = "📊"
+        else:
+            success_status = "status-warning"
+            success_text = "Needs improvement"
+            success_icon = "⚠️"
         
-        with col1a:
-            st.markdown(f"""
-            <div class="metric-card-blue">
-                <div class="metric-label">🏠 Households</div>
-                <div class="metric-number">{filtered_total:,}</div>
-                <div class="metric-status status-good">
-                    {filtered_total/total_households*100:.0f}% of total
-                </div>
+        st.markdown(f"""
+        <div class="metric-card-purple">
+            <div class="metric-label">📈 Success Rate</div>
+            <div class="metric-number">{filtered_success_rate:.1f}%</div>
+            <div class="metric-status {success_status}">
+                {success_icon} {success_text}
             </div>
-            """, unsafe_allow_html=True)
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col4a:
+        # Calculate high priority count
+        if 'intervention_priority' in filtered_df.columns:
+            high_priority_count = filtered_df[filtered_df['intervention_priority'] == 'High Priority'].shape[0]
+        else:
+            high_priority_count = filtered_high_risk
         
-        with col2a:
-            reduction_status = "status-good" if filtered_avg_reduction >= 30 else "status-warning"
-            reduction_icon = "✅" if filtered_avg_reduction >= 30 else "⚠️"
-            st.markdown(f"""
-            <div class="metric-card-green">
-                <div class="metric-label">📉 Avg Reduction</div>
-                <div class="metric-number">{filtered_avg_reduction:.1f}%</div>
-                <div class="metric-status {reduction_status}">
-                    {reduction_icon} {'Above' if filtered_avg_reduction >= 30 else 'Below'} target
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+        st.markdown(f"""
+        <div class="metric-card-orange">
+            <div class="metric-label">🎯 Priority Interventions</div>
+            <div class="metric-number">{high_priority_count:,}</div>
+            <div class="metric-label">High-priority households</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Priority alert for filtered data
+    if filtered_high_risk > 0:
+        high_risk_pct = (filtered_high_risk / filtered_total * 100) if filtered_total > 0 else 0
         
-        with col3a:
-            if filtered_success_rate >= 70:
-                success_status = "status-good"
-                success_text = "Excellent"
-                success_icon = "✅"
-            elif filtered_success_rate >= 50:
-                success_status = "status-warning"
-                success_text = "Good"
-                success_icon = "📊"
-            else:
-                success_status = "status-warning"
-                success_text = "Needs improvement"
-                success_icon = "⚠️"
-            
-            st.markdown(f"""
-            <div class="metric-card-purple">
-                <div class="metric-label">📈 Success Rate</div>
-                <div class="metric-number">{filtered_success_rate:.1f}%</div>
-                <div class="metric-status {success_status}">
-                    {success_icon} {success_text}
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+        if high_risk_pct > 40:
+            alert_class = "alert-danger"
+            icon = "🚨"
+        elif high_risk_pct > 20:
+            alert_class = "alert-warning"
+            icon = "⚠️"
+        else:
+            alert_class = "alert-success"
+            icon = "✅"
         
-        with col4a:
-            # Calculate high priority count
-            if 'intervention_priority' in filtered_df.columns:
-                high_priority_count = filtered_df[filtered_df['intervention_priority'] == 'High Priority'].shape[0]
-            else:
-                high_priority_count = filtered_high_risk
-            
-            st.markdown(f"""
-            <div class="metric-card-orange">
-                <div class="metric-label">🎯 Priority Interventions</div>
-                <div class="metric-number">{high_priority_count:,}</div>
-                <div class="metric-label">High-priority households</div>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        # Priority alert
-        if filtered_high_risk > 0:
-            high_risk_pct = (filtered_high_risk / filtered_total * 100) if filtered_total > 0 else 0
-            
-            if high_risk_pct > 40:
-                alert_class = "alert-danger"
-                icon = "🚨"
-            elif high_risk_pct > 20:
-                alert_class = "alert-warning"
-                icon = "⚠️"
-            else:
-                alert_class = "alert-success"
-                icon = "✅"
-            
-            st.markdown(f"""
-            <div class="{alert_class}">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <div style="font-size: 1.5rem;">{icon}</div>
-                    <div style="flex: 1;">
-                        <div style="font-weight: 600;">Priority Intervention Needed</div>
-                        <div style="font-size: 0.9rem; margin-top: 0.3rem;">
-                            {filtered_high_risk} households ({high_risk_pct:.1f}%) are below the 30% fuel reduction target
-                        </div>
+        st.markdown(f"""
+        <div class="{alert_class}">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="font-size: 1.5rem;">{icon}</div>
+                <div style="flex: 1;">
+                    <div style="font-weight: 600;">Priority Intervention Needed</div>
+                    <div style="font-size: 0.9rem; margin-top: 0.3rem;">
+                        {filtered_high_risk} households ({high_risk_pct:.1f}%) are below the 30% fuel reduction target
                     </div>
                 </div>
             </div>
-            """, unsafe_allow_html=True)
+        </div>
+        """, unsafe_allow_html=True)
 
-    # Enhanced Analysis Section with MORE PLOTS
-    st.markdown("<div class='section-title'>📈 Comprehensive Analysis(click for each)</div>", unsafe_allow_html=True)
+    # Enhanced Analysis Section with 6 tabs
+    st.markdown("<div class='section-title'>📈 Comprehensive Analysis</div>", unsafe_allow_html=True)
     
     # Tabbed analysis with 6 tabs
     tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
-        "🏘️ District Insights", 
         "🗺️ Geographic Analysis", 
         "📊 Performance Metrics",
         "📈 Usage Trends",
         "🎯 Risk Factors",
-        "🌿 Impact Analysis"
+        "🌿 Impact Analysis",
+        "📋 Detailed Insights"
     ])
     
     with tab1:
-        col1c, col2c = st.columns(2)
-        
-        with col1c:
-            st.markdown('<div class="plot-container">', unsafe_allow_html=True)
-            st.plotly_chart(create_district_comparison(filtered_df), use_container_width=True)
-            st.markdown('</div>', unsafe_allow_html=True)
-        
-        with col2c:
-            st.markdown('<div class="plot-container">', unsafe_allow_html=True)
-            st.plotly_chart(create_savings_analysis(filtered_df), use_container_width=True)
-            st.markdown('</div>', unsafe_allow_html=True)
-        
-        # District summary insights
-        if len(filtered_df) > 0 and 'district' in filtered_df.columns:
-            district_insights = filtered_df.groupby('district').agg({
-                'avg_reduction': 'mean',
-                'low_adoption_risk': 'mean',
-                'household_id': 'count'
-            }).reset_index()
-            
-            if len(district_insights) > 0:
-                top_district = district_insights.loc[district_insights['avg_reduction'].idxmax()]
-                bottom_district = district_insights.loc[district_insights['avg_reduction'].idxmin()]
-                
-                st.markdown('<div class="plot-container">', unsafe_allow_html=True)
-                st.markdown("### 🎯 District Performance Insights")
-                
-                col_insight1, col_insight2 = st.columns(2)
-                with col_insight1:
-                    st.metric(
-                        f"🏆 Top Performer: {top_district['district']}",
-                        f"{top_district['avg_reduction']:.1f}%",
-                        f"Risk: {top_district['low_adoption_risk']:.1%}"
-                    )
-                
-                with col_insight2:
-                    st.metric(
-                        f"📉 Needs Support: {bottom_district['district']}",
-                        f"{bottom_district['avg_reduction']:.1f}%",
-                        f"Risk: {bottom_district['low_adoption_risk']:.1%}",
-                        delta_color="inverse"
-                    )
-                
-                # District ranking
-                st.markdown("**District Ranking by Performance:**")
-                for idx, row in district_insights.sort_values('avg_reduction', ascending=False).iterrows():
-                    progress_value = min(100, max(0, row['avg_reduction']))
-                    st.progress(progress_value/100, 
-                              text=f"{row['district']}: {row['avg_reduction']:.1f}% ({row['household_id']:,} households)")
-                
-                st.markdown('</div>', unsafe_allow_html=True)
-    
-    with tab2:
         st.markdown('<div class="plot-container">', unsafe_allow_html=True)
         st.plotly_chart(create_geographic_map(filtered_df), use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
@@ -1237,7 +1369,7 @@ with col_main:
                         st.metric("Avg distance to market", f"{filtered_df['distance_to_market_km'].mean():.1f} km")
                 st.markdown('</div>', unsafe_allow_html=True)
     
-    with tab3:
+    with tab2:
         col1e, col2e = st.columns(2)
         
         with col1e:
@@ -1274,7 +1406,7 @@ with col_main:
                     """, unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
     
-    with tab4:
+    with tab3:
         col1f, col2f = st.columns(2)
         
         with col1f:
@@ -1313,7 +1445,7 @@ with col_main:
             
             st.markdown('</div>', unsafe_allow_html=True)
     
-    with tab5:
+    with tab4:
         col1g, col2g = st.columns(2)
         
         with col1g:
@@ -1363,7 +1495,7 @@ with col_main:
             
             st.markdown('</div>', unsafe_allow_html=True)
     
-    with tab6:
+    with tab5:
         col1h, col2h = st.columns(2)
         
         with col1h:
@@ -1407,6 +1539,65 @@ with col_main:
                     st.metric("Annual Economic Value", f"${weekly_wage_savings * 52:,.0f}")
             
             st.markdown('</div>', unsafe_allow_html=True)
+    
+    with tab6:
+        # Detailed insights tab
+        st.markdown('<div class="plot-container">', unsafe_allow_html=True)
+        st.markdown("### 📋 Detailed District Insights")
+        
+        if len(filtered_df) > 0 and 'district' in filtered_df.columns:
+            # Create a detailed table
+            detailed_stats = filtered_df.groupby('district').agg({
+                'avg_reduction': ['mean', 'std', 'min', 'max'],
+                'household_id': 'count',
+                'low_adoption_risk': 'mean',
+                'distance_to_market_km': 'mean',
+                'household_size': 'mean'
+            }).round(2)
+            
+            # Flatten column names
+            detailed_stats.columns = ['_'.join(col).strip() for col in detailed_stats.columns.values]
+            detailed_stats = detailed_stats.reset_index()
+            
+            # Rename columns for readability
+            column_mapping = {
+                'district': 'District',
+                'avg_reduction_mean': 'Avg Reduction (%)',
+                'avg_reduction_std': 'Std Dev',
+                'avg_reduction_min': 'Min Reduction',
+                'avg_reduction_max': 'Max Reduction',
+                'household_id_count': 'Households',
+                'low_adoption_risk_mean': 'Risk Rate',
+                'distance_to_market_km_mean': 'Avg Distance (km)',
+                'household_size_mean': 'Avg Household Size'
+            }
+            
+            detailed_stats = detailed_stats.rename(columns=column_mapping)
+            
+            # Display the table
+            st.dataframe(
+                detailed_stats,
+                use_container_width=True,
+                hide_index=True,
+                column_config={
+                    "Avg Reduction (%)": st.column_config.ProgressColumn(
+                        "Avg Reduction (%)",
+                        help="Average fuel reduction percentage",
+                        format="%.1f%%",
+                        min_value=0,
+                        max_value=100,
+                    ),
+                    "Risk Rate": st.column_config.ProgressColumn(
+                        "Risk Rate",
+                        help="Percentage of households below 30% target",
+                        format="%.1f%%",
+                        min_value=0,
+                        max_value=100,
+                    ),
+                }
+            )
+        
+        st.markdown('</div>', unsafe_allow_html=True)
 
 # Data Quality Section
 st.markdown("<div class='section-title'>🔍 Data Quality & Technical Insights</div>", unsafe_allow_html=True)
