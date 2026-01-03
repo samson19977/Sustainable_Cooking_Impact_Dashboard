@@ -8,7 +8,6 @@ import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-from datetime import datetime
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -62,9 +61,9 @@ st.markdown("""
     .dashboard-header {
         background: linear-gradient(135deg, #0c4a6e 0%, #0369a1 100%);
         color: white;
-        padding: 2.5rem 2rem;
+        padding: 1.5rem 2rem;
         border-radius: 16px;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
         text-align: center;
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     }
@@ -73,12 +72,13 @@ st.markdown("""
     .metric-card-blue {
         background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%);
         color: white;
-        padding: 1.5rem;
+        padding: 1rem;
         border-radius: 12px;
         border: none;
         box-shadow: 0 6px 15px rgba(59, 130, 246, 0.2);
         text-align: center;
         transition: transform 0.3s ease;
+        height: 100%;
     }
     
     .metric-card-blue:hover {
@@ -88,12 +88,13 @@ st.markdown("""
     .metric-card-green {
         background: linear-gradient(135deg, #059669 0%, #10b981 100%);
         color: white;
-        padding: 1.5rem;
+        padding: 1rem;
         border-radius: 12px;
         border: none;
         box-shadow: 0 6px 15px rgba(16, 185, 129, 0.2);
         text-align: center;
         transition: transform 0.3s ease;
+        height: 100%;
     }
     
     .metric-card-green:hover {
@@ -103,12 +104,13 @@ st.markdown("""
     .metric-card-purple {
         background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
         color: white;
-        padding: 1.5rem;
+        padding: 1rem;
         border-radius: 12px;
         border: none;
         box-shadow: 0 6px 15px rgba(139, 92, 246, 0.2);
         text-align: center;
         transition: transform 0.3s ease;
+        height: 100%;
     }
     
     .metric-card-purple:hover {
@@ -118,12 +120,13 @@ st.markdown("""
     .metric-card-orange {
         background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
         color: white;
-        padding: 1.5rem;
+        padding: 1rem;
         border-radius: 12px;
         border: none;
         box-shadow: 0 6px 15px rgba(249, 115, 22, 0.2);
         text-align: center;
         transition: transform 0.3s ease;
+        height: 100%;
     }
     
     .metric-card-orange:hover {
@@ -132,21 +135,21 @@ st.markdown("""
     
     /* Card content styling */
     .metric-number {
-        font-size: 2.2rem;
+        font-size: 1.8rem;
         font-weight: 800;
         margin: 0.5rem 0;
         line-height: 1;
     }
     
     .metric-label {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         opacity: 0.9;
         margin-bottom: 0.5rem;
         font-weight: 500;
     }
     
     .metric-status {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         padding: 0.3rem 0.8rem;
         border-radius: 20px;
         display: inline-block;
@@ -167,9 +170,9 @@ st.markdown("""
     /* Section titles */
     .section-title {
         color: #0c4a6e;
-        font-size: 1.4rem;
+        font-size: 1.2rem;
         font-weight: 700;
-        margin: 2rem 0 1rem 0;
+        margin: 1.5rem 0 1rem 0;
         padding-bottom: 0.5rem;
         border-bottom: 2px solid #0ea5e9;
     }
@@ -177,7 +180,7 @@ st.markdown("""
     /* Left panel styling */
     .left-panel {
         background: white;
-        padding: 1.5rem;
+        padding: 1.2rem;
         border-radius: 12px;
         border: 1px solid #e2e8f0;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
@@ -187,7 +190,7 @@ st.markdown("""
     .data-overview {
         background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
         border-radius: 10px;
-        padding: 1.2rem;
+        padding: 1rem;
         border: 1px solid #bae6fd;
         margin-top: 1.5rem;
     }
@@ -195,21 +198,12 @@ st.markdown("""
     /* Plot container */
     .plot-container {
         background: white;
-        padding: 1.5rem;
+        padding: 1.2rem;
         border-radius: 12px;
         border: 1px solid #e2e8f0;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    }
-    
-    /* Feature highlight container */
-    .featured-plot-container {
-        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-        padding: 2rem;
-        border-radius: 16px;
-        border: 2px solid #e2e8f0;
-        margin-bottom: 2rem;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        height: 100%;
     }
     
     /* Status indicators */
@@ -242,21 +236,21 @@ st.markdown("""
     .metrics-grid-4 {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr 1fr;
-        gap: 1rem;
+        gap: 0.8rem;
         margin-bottom: 1rem;
     }
     
     .metrics-grid-2 {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 1rem;
+        gap: 0.8rem;
         margin-bottom: 1rem;
     }
     
     /* Storytelling cards */
     .story-card {
         background: white;
-        padding: 1.5rem;
+        padding: 1.2rem;
         border-radius: 12px;
         border: 1px solid #e2e8f0;
         height: 100%;
@@ -272,25 +266,25 @@ st.markdown("""
     .alert-success {
         background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
         border-left: 4px solid #16a34a;
-        padding: 1rem;
+        padding: 0.8rem;
         border-radius: 8px;
-        margin: 1rem 0;
+        margin: 0.8rem 0;
     }
     
     .alert-warning {
         background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
         border-left: 4px solid #d97706;
-        padding: 1rem;
+        padding: 0.8rem;
         border-radius: 8px;
-        margin: 1rem 0;
+        margin: 0.8rem 0;
     }
     
     .alert-danger {
         background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
         border-left: 4px solid #dc2626;
-        padding: 1rem;
+        padding: 0.8rem;
         border-radius: 8px;
-        margin: 1rem 0;
+        margin: 0.8rem 0;
     }
     
     /* Data quality indicator */
@@ -309,15 +303,6 @@ st.markdown("""
     .quality-warning {
         background: #fef3c7;
         color: #92400e;
-    }
-    
-    /* Featured insight box */
-    .featured-insight {
-        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-        border-left: 5px solid #0ea5e9;
-        padding: 1.5rem;
-        border-radius: 10px;
-        margin: 1rem 0;
     }
     
     /* District ranking styles */
@@ -358,16 +343,43 @@ st.markdown("""
         background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
         border-left: 4px solid #ef4444;
     }
+    
+    /* Tab styling */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 0.5rem;
+    }
+    
+    .stTabs [data-baseweb="tab"] {
+        height: 40px;
+        padding: 0 1rem;
+        border-radius: 8px 8px 0 0;
+    }
+    
+    /* Compact layout */
+    .compact-row {
+        margin-bottom: 0.5rem !important;
+    }
+    
+    /* No space classes */
+    .no-space-top {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+    
+    .no-space-bottom {
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
 # =====================================================
-# DATA LOADING FUNCTION - UPDATED FOR YOUR REAL DATA STRUCTURE
+# DATA LOADING FUNCTION - IMPROVED WITH YOUR CLEANING CODE
 # =====================================================
 
 @st.cache_data(ttl=3600)
 def load_and_process_data():
-    """Load and process the REAL DelAgua dataset."""
+    """Load and process the REAL DelAgua dataset with proper cleaning."""
     try:
         # Try to load the real data file
         possible_paths = [
@@ -381,6 +393,7 @@ def load_and_process_data():
         for path in possible_paths:
             try:
                 df = pd.read_csv(path)
+                st.success(f"✅ Data loaded from: {path}")
                 break
             except:
                 continue
@@ -389,29 +402,75 @@ def load_and_process_data():
             st.error("❌ Could not load data file. Please ensure 'delagua_stove_data_cleaned.csv' is in the correct location.")
             return pd.DataFrame()
         
+        # =====================================================
+        # DATA CLEANING - USING YOUR PROVIDED CODE
+        # =====================================================
+        
         # Clean column names
         df.columns = df.columns.str.strip().str.lower().str.replace(' ', '_')
         
-        # Standardize district names - CRITICAL FIX
+        # 1. Handle duplicate household IDs (most critical - each household should be unique)
+        st.info("🔄 Removing duplicate household IDs...")
+        if 'household_id' in df.columns:
+            initial_count = len(df)
+            df = df.drop_duplicates(subset='household_id', keep='first')
+            st.success(f"  Removed {initial_count - len(df)} duplicate household IDs")
+        
+        # 2. Standardize district names to consistent format
         if 'district' in df.columns:
-            # Clean district names
-            df['district'] = df['district'].astype(str).str.strip()
+            st.info("🔄 Standardizing district names...")
             
-            # Fix spelling variations based on your data sample
-            district_mapping = {
+            # Clean district names
+            df['district'] = df['district'].astype(str).str.strip().str.title()
+            
+            # Define mapping for specific corrections
+            district_corrections = {
                 'Burера': 'Burera',
-                'Burera': 'Burera',
                 'Gakenki': 'Gakenke',
-                'Gakenke': 'Gakenke',
                 'Musanza': 'Musanze',
-                'Musanze': 'Musanze',
                 'Nyabihi': 'Nyabihu',
-                'Nyabihu': 'Nyabihu',
                 'Rulino': 'Rulindo',
+                'Musanze': 'Musanze',
+                'Nyabihu': 'Nyabihu',
                 'Rulindo': 'Rulindo'
             }
             
-            df['district'] = df['district'].map(district_mapping).fillna(df['district'])
+            # Apply corrections
+            df['district'] = df['district'].replace(district_corrections)
+            
+            # Verify standardization
+            unique_districts = df['district'].unique().tolist()
+            st.success(f"  Standardized to {len(unique_districts)} districts: {', '.join(sorted(unique_districts))}")
+        
+        # 3. Fix invalid coordinates
+        if 'latitude' in df.columns and 'longitude' in df.columns:
+            st.info("🔄 Fixing invalid coordinates...")
+            # Set invalid coordinates to NaN
+            initial_invalid = df[~df['latitude'].between(-90, 90) | ~df['longitude'].between(-180, 180)].shape[0]
+            df.loc[~df['latitude'].between(-90, 90), 'latitude'] = np.nan
+            df.loc[~df['longitude'].between(-180, 180), 'longitude'] = np.nan
+            st.success(f"  Fixed {initial_invalid} invalid coordinates")
+        
+        # 4. Fix negative usage values
+        st.info("🔄 Fixing negative usage values...")
+        usage_cols = [col for col in df.columns if 'usage_month' in col]
+        for col in usage_cols:
+            if col in df.columns:
+                initial_negative = (df[col] < 0).sum()
+                df.loc[df[col] < 0, col] = np.nan
+                if initial_negative > 0:
+                    st.success(f"  Fixed {initial_negative} negative values in {col}")
+        
+        # 5. Fix unrealistic household size
+        if 'household_size' in df.columns:
+            st.info("🔄 Fixing unrealistic household sizes...")
+            initial_unrealistic = (df['household_size'] < 1).sum()
+            df.loc[df['household_size'] < 1, 'household_size'] = np.nan
+            st.success(f"  Fixed {initial_unrealistic} unrealistic household sizes")
+        
+        # =====================================================
+        # DATA PROCESSING
+        # =====================================================
         
         # Parse distribution date
         if 'distribution_date' in df.columns:
@@ -424,17 +483,15 @@ def load_and_process_data():
                 df['distribution_year'] = 2023
         
         # Calculate fuel reduction from monthly usage data
-        # Based on your data: baseline_fuel_kg_person_week * household_size = expected weekly fuel
-        # monthly usage columns show actual fuel use
-        
-        # Identify monthly usage columns
         usage_cols = [col for col in df.columns if 'usage_month' in col]
         
         if len(usage_cols) > 0 and 'baseline_fuel_kg_person_week' in df.columns and 'household_size' in df.columns:
+            st.info("🔄 Calculating fuel reduction metrics...")
+            
             # Calculate expected weekly fuel
             df['expected_weekly_fuel_kg'] = df['baseline_fuel_kg_person_week'] * df['household_size']
             
-            # Calculate actual average monthly fuel (convert from weekly to monthly: * 4.33)
+            # Calculate expected monthly fuel
             df['expected_monthly_fuel_kg'] = df['expected_weekly_fuel_kg'] * 4.33
             
             # Calculate average actual monthly fuel from usage columns
@@ -442,7 +499,7 @@ def load_and_process_data():
             
             # Calculate fuel reduction percentage
             df['fuel_reduction_percent'] = ((df['expected_monthly_fuel_kg'] - df['actual_monthly_fuel_kg']) / 
-                                           df['expected_monthly_fuel_kg']) * 100
+                                           df['expected_monthly_fuel_kg'].replace(0, np.nan)) * 100
             
             # Handle edge cases
             df['fuel_reduction_percent'] = df['fuel_reduction_percent'].fillna(0)
@@ -450,11 +507,20 @@ def load_and_process_data():
             
             # Use this as avg_reduction for compatibility
             df['avg_reduction'] = df['fuel_reduction_percent']
+            
+            st.success("✅ Fuel reduction metrics calculated")
         else:
             # If we can't calculate from usage data, create synthetic data
             st.warning("⚠️ Using calculated fuel reduction data")
             np.random.seed(42)
             df['avg_reduction'] = np.random.normal(32.7, 25, len(df)).clip(-100, 100)
+        
+        # Create adoption categories based on your provided code
+        df['adoption_category'] = pd.cut(
+            df['avg_reduction'],
+            bins=[-float('inf'), 15, 30, 50, float('inf')],
+            labels=['Very Low (<15%)', 'Low (15-30%)', 'Moderate (30-50%)', 'High (>50%)']
+        )
         
         # Create risk indicators
         df['low_adoption_risk'] = (df['avg_reduction'] < 30).astype(int)
@@ -522,14 +588,50 @@ def load_and_process_data():
         if 'longitude' not in df.columns:
             df['longitude'] = np.random.uniform(29.6, 29.9, len(df))
         
+        # =====================================================
+        # DATA QUALITY CHECK - USING YOUR PROVIDED CODE
+        # =====================================================
+        st.info("📊 Data quality after cleaning:")
+        
+        # Check missing values
+        missing_after = df.isnull().sum()
+        missing_cols = missing_after[missing_after > 0]
+        
+        # Check for remaining issues
+        duplicate_ids = df['household_id'].duplicated().sum() if 'household_id' in df.columns else 0
+        invalid_coords = df[(~df['latitude'].between(-90, 90)) | (~df['longitude'].between(-180, 180))].shape[0]
+        negative_usage = sum((df[f'usage_month_{i}'] < 0).sum() for i in range(1, 7) if f'usage_month_{i}' in df.columns)
+        unrealistic_size = (df['household_size'] < 1).sum() if 'household_size' in df.columns else 0
+        
+        quality_metrics = {
+            "Total Records": len(df),
+            "Duplicate IDs": duplicate_ids,
+            "Invalid Coordinates": invalid_coords,
+            "Negative Usage": negative_usage,
+            "Unrealistic Household Size": unrealistic_size
+        }
+        
+        # Display quality metrics
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric("✅ Total Records", f"{quality_metrics['Total Records']:,}")
+        with col2:
+            st.metric("✅ Duplicate IDs", f"{quality_metrics['Duplicate IDs']:,}")
+        with col3:
+            st.metric("✅ Invalid Coords", f"{quality_metrics['Invalid Coordinates']:,}")
+        
+        st.success("🎉 Data processing complete!")
+        
         return df
         
     except Exception as e:
         st.error(f"❌ Error processing data: {str(e)}")
+        import traceback
+        st.error(traceback.format_exc())
         return pd.DataFrame()
 
 # =====================================================
-# VISUALIZATION FUNCTIONS - FIXED FOR REAL DATA
+# VISUALIZATION FUNCTIONS - UPDATED
 # =====================================================
 
 def create_empty_plot(message):
@@ -545,12 +647,12 @@ def create_empty_plot(message):
     fig.update_layout(
         plot_bgcolor='white',
         paper_bgcolor='white',
-        height=400
+        height=350
     )
     return fig
 
 def create_district_comparison(filtered_df):
-    """Create district performance comparison chart - FIXED."""
+    """Create district performance comparison chart."""
     if len(filtered_df) < 5:
         return create_empty_plot("Need more data for district comparison")
     
@@ -606,13 +708,14 @@ def create_district_comparison(filtered_df):
         fig.add_vline(x=30, line_dash="dash", line_color="red", opacity=0.7)
         
         fig.update_layout(
-            height=500,
+            height=400,
             title='District Performance Ranking',
             plot_bgcolor='white',
             paper_bgcolor='white',
             xaxis_title='Average Fuel Reduction (%)',
+            yaxis_title='District',
             showlegend=False,
-            margin=dict(l=10, r=10, t=50, b=20)
+            margin=dict(l=10, r=10, t=40, b=20)
         )
         
         return fig
@@ -620,77 +723,135 @@ def create_district_comparison(filtered_df):
     except Exception as e:
         return create_empty_plot(f"Error creating chart: {str(e)}")
 
-def create_performance_distribution(filtered_df):
-    """Create performance distribution visualization - FIXED."""
+def create_adoption_distribution(filtered_df):
+    """Create adoption distribution visualization."""
     if len(filtered_df) < 10:
         return create_empty_plot("Need more data for distribution analysis")
     
     try:
-        # FIX: Ensure avg_reduction is numeric and has no NaN values
-        if 'avg_reduction' not in filtered_df.columns:
-            return create_empty_plot("Performance data not available")
+        if 'adoption_category' not in filtered_df.columns:
+            return create_empty_plot("Adoption category data not available")
         
-        # Clean the data
-        reduction_data = pd.to_numeric(filtered_df['avg_reduction'], errors='coerce')
-        reduction_data = reduction_data.dropna()
+        # Count by adoption category
+        category_counts = filtered_df['adoption_category'].value_counts().reset_index()
+        category_counts.columns = ['Category', 'Count']
         
-        if len(reduction_data) < 10:
-            return create_empty_plot("Not enough valid performance data")
+        # Define color mapping
+        color_map = {
+            'High (>50%)': '#059669',
+            'Moderate (30-50%)': '#10b981',
+            'Low (15-30%)': '#f59e0b',
+            'Very Low (<15%)': '#ef4444'
+        }
         
-        fig = make_subplots(
-            rows=1, cols=2,
-            subplot_titles=('Performance Distribution', 'Risk Analysis'),
-            specs=[[{'type': 'histogram'}, {'type': 'pie'}]],
-            horizontal_spacing=0.15
-        )
+        # Create bar chart
+        fig = go.Figure()
         
-        # Histogram with color gradient - FIXED: Use clean data
-        fig.add_trace(
-            go.Histogram(
-                x=reduction_data,
-                nbinsx=30,
-                marker_color=reduction_data,
-                colorscale='RdYlGn',
-                opacity=0.7,
-                hovertemplate='Reduction: %{x:.1f}%<br>Households: %{y}<extra></extra>'
-            ),
-            row=1, col=1
-        )
-        
-        fig.add_vline(x=30, line_dash="dash", line_color="red", opacity=0.7, row=1, col=1)
-        
-        # Enhanced pie chart using the cleaned data
-        risk_counts = filtered_df['low_adoption_risk'].value_counts()
-        labels = ['Success (≥30%)', 'High Risk (<30%)']
-        colors = ['#10b981', '#ef4444']
-        
-        fig.add_trace(
-            go.Pie(
-                labels=labels,
-                values=risk_counts.values,
-                marker_colors=colors,
-                hole=0.4,
-                textinfo='label+percent',
-                hoverinfo='label+value+percent',
-                textposition='inside'
-            ),
-            row=1, col=2
-        )
+        for category in category_counts['Category']:
+            category_data = category_counts[category_counts['Category'] == category]
+            fig.add_trace(go.Bar(
+                x=[category_data['Count'].values[0]],
+                y=[category_data['Category'].values[0]],
+                orientation='h',
+                marker_color=color_map.get(category, '#6b7280'),
+                name=category,
+                text=[f"{category_data['Count'].values[0]:,}"],
+                textposition='auto',
+                hovertemplate='<b>%{y}</b><br>Households: %{x:,}<extra></extra>'
+            ))
         
         fig.update_layout(
-            height=400,
+            height=350,
+            title='Adoption Level Distribution',
             plot_bgcolor='white',
             paper_bgcolor='white',
-            showlegend=False
+            xaxis_title='Number of Households',
+            yaxis_title='Adoption Level',
+            showlegend=False,
+            margin=dict(l=10, r=10, t=40, b=20)
         )
         
         return fig
         
     except Exception as e:
-        return create_empty_plot(f"Error creating distribution: {str(e)}")
+        return create_empty_plot(f"Error creating adoption distribution: {str(e)}")
+
+def create_overall_performance(filtered_df):
+    """Create overall program performance visualization."""
+    if len(filtered_df) < 10:
+        return create_empty_plot("Need more data for performance analysis")
+    
+    try:
+        if 'avg_reduction' not in filtered_df.columns:
+            return create_empty_plot("Performance data not available")
+        
+        # Create figure with two subplots
+        fig = make_subplots(
+            rows=1, cols=2,
+            subplot_titles=('Distribution of Adoption Categories', 'Average Reduction by District'),
+            specs=[[{'type': 'bar'}, {'type': 'bar'}]],
+            horizontal_spacing=0.2
+        )
+        
+        # Plot 1: Distribution of Adoption Categories
+        if 'adoption_category' in filtered_df.columns:
+            category_order = ['High (>50%)', 'Moderate (30-50%)', 'Low (15-30%)', 'Very Low (<15%)']
+            category_counts = filtered_df['adoption_category'].value_counts().reindex(category_order).fillna(0)
+            colors = ['#2E8B57', '#7BCF6B', '#FFB74D', '#E57373']
+            
+            fig.add_trace(
+                go.Bar(
+                    x=category_counts.index,
+                    y=category_counts.values,
+                    marker_color=colors,
+                    name='Adoption Categories',
+                    hovertemplate='Category: %{x}<br>Households: %{y:,}<extra></extra>'
+                ),
+                row=1, col=1
+            )
+        
+        # Plot 2: Average Reduction by District
+        if 'district' in filtered_df.columns:
+            district_performance = filtered_df.groupby('district')['avg_reduction'].mean().sort_values()
+            
+            # Color bars based on performance
+            bar_colors = ['#E57373' if x < 30 else '#7BCF6B' for x in district_performance.values]
+            
+            fig.add_trace(
+                go.Bar(
+                    y=district_performance.index,
+                    x=district_performance.values,
+                    orientation='h',
+                    marker_color=bar_colors,
+                    name='District Performance',
+                    hovertemplate='District: %{y}<br>Avg Reduction: %{x:.1f}%<extra></extra>'
+                ),
+                row=1, col=2
+            )
+            
+            # Add target line
+            fig.add_vline(x=30, line_dash="dash", line_color="red", opacity=0.7, row=1, col=2)
+        
+        fig.update_layout(
+            height=400,
+            plot_bgcolor='white',
+            paper_bgcolor='white',
+            showlegend=False,
+            margin=dict(l=10, r=10, t=60, b=20)
+        )
+        
+        fig.update_xaxes(title_text="Number of Households", row=1, col=1)
+        fig.update_xaxes(title_text="Average Reduction (%)", row=1, col=2)
+        fig.update_yaxes(title_text="Adoption Level", row=1, col=1)
+        fig.update_yaxes(title_text="District", row=1, col=2)
+        
+        return fig
+        
+    except Exception as e:
+        return create_empty_plot(f"Error creating performance chart: {str(e)}")
 
 def create_geographic_map(filtered_df):
-    """Create interactive geographic map - FIXED."""
+    """Create interactive geographic map."""
     if len(filtered_df) < 5:
         return create_empty_plot("Need more data for geographic analysis")
     
@@ -732,7 +893,7 @@ def create_geographic_map(filtered_df):
             color_continuous_scale="RdYlGn",
             zoom=8.5,
             center=dict(lat=-1.4, lon=29.7),
-            height=500,
+            height=400,
             title="Geographic Distribution of Stove Adoption"
         )
         
@@ -747,6 +908,75 @@ def create_geographic_map(filtered_df):
         
     except Exception as e:
         return create_empty_plot(f"Error creating map: {str(e)}")
+
+def create_performance_distribution(filtered_df):
+    """Create performance distribution visualization."""
+    if len(filtered_df) < 10:
+        return create_empty_plot("Need more data for distribution analysis")
+    
+    try:
+        # FIX: Ensure avg_reduction is numeric and has no NaN values
+        if 'avg_reduction' not in filtered_df.columns:
+            return create_empty_plot("Performance data not available")
+        
+        # Clean the data
+        reduction_data = pd.to_numeric(filtered_df['avg_reduction'], errors='coerce')
+        reduction_data = reduction_data.dropna()
+        
+        if len(reduction_data) < 10:
+            return create_empty_plot("Not enough valid performance data")
+        
+        fig = make_subplots(
+            rows=1, cols=2,
+            subplot_titles=('Performance Distribution', 'Risk Analysis'),
+            specs=[[{'type': 'histogram'}, {'type': 'pie'}]],
+            horizontal_spacing=0.15
+        )
+        
+        # Histogram with color gradient
+        fig.add_trace(
+            go.Histogram(
+                x=reduction_data,
+                nbinsx=30,
+                marker_color=reduction_data,
+                colorscale='RdYlGn',
+                opacity=0.7,
+                hovertemplate='Reduction: %{x:.1f}%<br>Households: %{y}<extra></extra>'
+            ),
+            row=1, col=1
+        )
+        
+        fig.add_vline(x=30, line_dash="dash", line_color="red", opacity=0.7, row=1, col=1)
+        
+        # Enhanced pie chart
+        risk_counts = filtered_df['low_adoption_risk'].value_counts()
+        labels = ['Success (≥30%)', 'High Risk (<30%)']
+        colors = ['#10b981', '#ef4444']
+        
+        fig.add_trace(
+            go.Pie(
+                labels=labels,
+                values=risk_counts.values,
+                marker_colors=colors,
+                hole=0.4,
+                textinfo='label+percent',
+                hoverinfo='label+value+percent',
+                textposition='inside'
+            ),
+            row=1, col=2
+        )
+        
+        fig.update_layout(
+            height=350,
+            plot_bgcolor='white',
+            paper_bgcolor='white',
+            showlegend=False
+        )
+        
+        return fig
+        
+    except Exception as e:
+        return create_empty_plot(f"Error creating distribution: {str(e)}")
 
 def create_usage_trends(filtered_df):
     """Create monthly usage trends visualization."""
@@ -785,7 +1015,7 @@ def create_usage_trends(filtered_df):
                          opacity=0.7, annotation_text="Expected Fuel Use")
         
         fig.update_layout(
-            height=400,
+            height=350,
             title='Monthly Fuel Usage Trends',
             xaxis_title='Month',
             yaxis_title='Average Fuel (kg)',
@@ -830,7 +1060,7 @@ def create_risk_heatmap(filtered_df):
         ))
         
         fig.update_layout(
-            height=400,
+            height=350,
             title='Risk Heatmap: Distance vs Household Size',
             xaxis_title='Household Size',
             yaxis_title='Distance to Market',
@@ -871,7 +1101,7 @@ def create_savings_analysis(filtered_df):
         ))
         
         fig.update_layout(
-            height=400,
+            height=350,
             title='Weekly Fuel Savings by District',
             xaxis_title='District',
             yaxis_title='Weekly Savings (tons)',
@@ -884,52 +1114,13 @@ def create_savings_analysis(filtered_df):
     except Exception as e:
         return create_empty_plot(f"Error creating savings analysis: {str(e)}")
 
-def create_intervention_priority(filtered_df):
-    """Create intervention priority visualization."""
-    if len(filtered_df) < 5:
-        return create_empty_plot("Need more data for priority analysis")
-    
-    try:
-        if 'intervention_priority' not in filtered_df.columns:
-            # Create it if missing
-            filtered_df['intervention_priority'] = np.where(
-                (filtered_df['low_adoption_risk'] == 1) & (filtered_df['distance_to_market_km'] > 10),
-                'High Priority',
-                np.where(filtered_df['low_adoption_risk'] == 1, 'Medium Priority', 'Low Priority')
-            )
-        
-        # Count by priority
-        priority_counts = filtered_df['intervention_priority'].value_counts()
-        
-        fig = go.Figure()
-        
-        fig.add_trace(go.Bar(
-            x=priority_counts.index,
-            y=priority_counts.values,
-            marker_color=['#ef4444', '#f59e0b', '#10b981'],  # Red, Yellow, Green
-            hovertemplate='Priority: %{x}<br>Households: %{y}<extra></extra>'
-        ))
-        
-        fig.update_layout(
-            height=400,
-            title='Intervention Priority Distribution',
-            xaxis_title='Priority Level',
-            yaxis_title='Number of Households',
-            plot_bgcolor='white',
-            paper_bgcolor='white'
-        )
-        
-        return fig
-        
-    except Exception as e:
-        return create_empty_plot(f"Error creating priority chart: {str(e)}")
-
 # =====================================================
-# DASHBOARD LAYOUT - COMPLETE REBUILD WITH FEATURED PLOT FIRST
+# DASHBOARD LAYOUT - COMPACT AND EFFICIENT
 # =====================================================
 
 # Load and process data
-df = load_and_process_data()
+with st.spinner('🔄 Loading and processing data...'):
+    df = load_and_process_data()
 
 # Check if data was loaded successfully
 if df.empty:
@@ -959,96 +1150,32 @@ if 'district' in df.columns:
 else:
     districts_clean = []
 
-# Dashboard Header - NO SUCCESS MESSAGE
+# =====================================================
+# DASHBOARD HEADER
+# =====================================================
 st.markdown(f"""
 <div class="dashboard-header">
-    <h1 style="margin: 0 0 10px 0; font-size: 2.8rem; font-weight: 800;">
+    <h1 style="margin: 0 0 10px 0; font-size: 2.2rem; font-weight: 800;">
         🔥 Sustainable Cooking Impact Dashboard
     </h1>
-    <p style="margin: 0; opacity: 0.9; font-size: 1.2rem;">
-        DelAgua Stove Programme • Monitoring {total_households:,} households in Rwanda's Northern Province
+    <p style="margin: 0; opacity: 0.9; font-size: 1.1rem;">
+        DelAgua Stove Programme • Monitoring {total_households:,} households in Rwanda
     </p>
-    <p style="margin: 1rem 0 0 0; opacity: 0.8; font-size: 1rem;">
+    <p style="margin: 0.5rem 0 0 0; opacity: 0.8; font-size: 0.95rem;">
         Data-driven interventions for {high_risk_count:,} high-risk households ({high_risk_count/total_households*100:.1f}% below target)
     </p>
 </div>
 """, unsafe_allow_html=True)
 
-# MAIN LAYOUT REVAMP: Featured Plot FIRST, then filters
-col_main_full = st.columns([1])
-
-with col_main_full[0]:
-    # FEATURED DISTRICT PERFORMANCE PLOT - FIRST VIEW
-    st.markdown("""
-    <div class="featured-plot-container">
-        <h2 style="color: #0c4a6e; margin-top: 0; text-align: center; margin-bottom: 1.5rem;">
-            🏆 District Performance Dashboard
-        </h2>
-        <p style="text-align: center; color: #475569; margin-bottom: 1.5rem; font-size: 1.1rem;">
-            Interactive ranking of districts by fuel reduction performance (target: 30%)
-        </p>
-    """, unsafe_allow_html=True)
-    
-    # Create initial district comparison with all data
-    district_fig = create_district_comparison(df)
-    st.plotly_chart(district_fig, use_container_width=True)
-    
-    # Add key insights below the featured plot
-    if len(df) > 0 and 'district' in df.columns:
-        district_stats = df.groupby('district').agg({
-            'avg_reduction': 'mean',
-            'low_adoption_risk': 'mean',
-            'household_id': 'count'
-        }).reset_index()
-        
-        if len(district_stats) > 0:
-            district_stats = district_stats.sort_values('avg_reduction', ascending=False)
-            
-            st.markdown("""
-            <div class="featured-insight">
-                <h4 style="margin-top: 0; color: #0c4a6e;">🎯 Key District Insights</h4>
-            """, unsafe_allow_html=True)
-            
-            # Create 3 columns for top performers
-            col_ins1, col_ins2, col_ins3 = st.columns(3)
-            
-            with col_ins1:
-                if len(district_stats) > 0:
-                    top_district = district_stats.iloc[0]
-                    st.metric(
-                        f"🏆 Top Performer",
-                        f"{top_district['district']}",
-                        f"{top_district['avg_reduction']:.1f}% reduction"
-                    )
-            
-            with col_ins2:
-                if len(district_stats) > 1:
-                    mid_district = district_stats.iloc[len(district_stats)//2]
-                    st.metric(
-                        f"📊 Middle Performer",
-                        f"{mid_district['district']}",
-                        f"{mid_district['avg_reduction']:.1f}% reduction"
-                    )
-            
-            with col_ins3:
-                if len(district_stats) > 2:
-                    bottom_district = district_stats.iloc[-1]
-                    st.metric(
-                        f"🚨 Needs Support",
-                        f"{bottom_district['district']}",
-                        f"{bottom_district['avg_reduction']:.1f}% reduction",
-                        delta_color="inverse"
-                    )
-            
-            st.markdown("</div>", unsafe_allow_html=True)
-    
-    st.markdown("</div>", unsafe_allow_html=True)
-
-# Now create a two-column layout for the rest
-col_left, col_main = st.columns([1, 3])
+# =====================================================
+# MAIN LAYOUT - TWO COLUMNS
+# =====================================================
+col_left, col_main = st.columns([1, 2.5])
 
 with col_left:
-    # Filter Settings
+    # =====================================================
+    # FILTER SETTINGS
+    # =====================================================
     st.markdown('<div class="left-panel">', unsafe_allow_html=True)
     st.markdown("### 🎯 Filter Settings")
     
@@ -1070,13 +1197,6 @@ with col_left:
         help="Filter by adoption risk level"
     )
     
-    performance_level = st.selectbox(
-        "Performance Category",
-        options=["All", "Very Low", "Low", "Moderate", "Good", "Excellent"],
-        index=0,
-        help="Filter by performance category"
-    )
-    
     if 'avg_reduction' in df.columns:
         reduction_range = st.slider(
             "Fuel Reduction Range (%)",
@@ -1088,7 +1208,6 @@ with col_left:
         )
     else:
         reduction_range = (0, 100)
-        st.warning("No reduction data available")
     
     if 'distance_to_market_km' in df.columns:
         distance_range = st.slider(
@@ -1101,14 +1220,12 @@ with col_left:
         )
     else:
         distance_range = (0, 25)
-        st.warning("No distance data available")
-    
-    # Apply filters button
-    apply_filters = st.button("🔍 Apply Filters", type="primary", use_container_width=True)
     
     st.markdown('</div>', unsafe_allow_html=True)
     
-    # Data Overview
+    # =====================================================
+    # QUICK STATS
+    # =====================================================
     st.markdown('<div class="data-overview">', unsafe_allow_html=True)
     st.markdown("### 📊 Quick Stats")
     
@@ -1122,7 +1239,7 @@ with col_left:
     st.markdown("---")
     st.markdown("**📍 Districts:**")
     if len(districts_clean) > 0:
-        st.write(", ".join(districts_clean[:5]) + ("..." if len(districts_clean) > 5 else ""))
+        st.write(", ".join(districts_clean))
     else:
         st.write("No district data")
     
@@ -1134,14 +1251,17 @@ with col_left:
     
     st.markdown("**🎯 Key Insight:**")
     st.info(f"""
-    **{high_risk_count/total_households*100:.1f}% below target** • Top predictors:
+    **{high_risk_count/total_households*100:.1f}% below target** 
+    **Top predictors:**
     1. Distance to market
     2. District location  
     3. Household size
     """)
     st.markdown('</div>', unsafe_allow_html=True)
     
-    # Top 5 District Ranking
+    # =====================================================
+    # TOP 5 DISTRICTS
+    # =====================================================
     if 'district' in df.columns and len(df) > 0:
         st.markdown('<div class="left-panel">', unsafe_allow_html=True)
         st.markdown("### 🏅 Top 5 Districts")
@@ -1174,14 +1294,14 @@ with col_left:
             st.markdown(f"""
             <div class="district-ranking {rank_class}">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div style="font-weight: 600; font-size: 1rem;">
+                    <div style="font-weight: 600; font-size: 0.95rem;">
                         {icon} {row['district']}
                     </div>
                     <div style="font-weight: bold; color: {'#059669' if reduction >= 30 else '#f59e0b'};">
                         {reduction:.1f}%
                     </div>
                 </div>
-                <div style="font-size: 0.85rem; color: #64748b; margin-top: 0.25rem;">
+                <div style="font-size: 0.8rem; color: #64748b; margin-top: 0.25rem;">
                     {households:,} households
                 </div>
             </div>
@@ -1189,9 +1309,11 @@ with col_left:
         
         st.markdown('</div>', unsafe_allow_html=True)
 
-# Apply filters
+# =====================================================
+# APPLY FILTERS
+# =====================================================
 if len(selected_districts) == 0 or len(df) == 0:
-    filtered_df = pd.DataFrame()
+    filtered_df = df.copy()
 else:
     filtered_df = df[df['district'].isin(selected_districts)].copy()
     
@@ -1200,9 +1322,6 @@ else:
             filtered_df = filtered_df[filtered_df['low_adoption_risk'] == 1]
         else:
             filtered_df = filtered_df[filtered_df['low_adoption_risk'] == 0]
-    
-    if performance_level != "All" and 'performance_category' in filtered_df.columns:
-        filtered_df = filtered_df[filtered_df['performance_category'] == performance_level]
     
     reduction_min, reduction_max = reduction_range
     distance_min, distance_max = distance_range
@@ -1219,21 +1338,24 @@ else:
         ]
 
 with col_main:
-    # Show filter status
+    # =====================================================
+    # FILTERED METRICS
+    # =====================================================
     if len(filtered_df) == 0:
         st.warning("⚠️ No households match your filter criteria. Showing all data instead.")
         filtered_df = df.copy()
     
     filtered_total = len(filtered_df)
-    
-    # Metrics for filtered data
-    st.markdown("<div class='section-title'>📊 Filtered Analysis</div>", unsafe_allow_html=True)
+    filtered_avg_reduction = filtered_df['avg_reduction'].mean() if 'avg_reduction' in filtered_df.columns else 0
+    filtered_high_risk = filtered_df['low_adoption_risk'].sum() if 'low_adoption_risk' in filtered_df.columns else 0
+    filtered_success_rate = ((filtered_total - filtered_high_risk) / filtered_total * 100) if filtered_total > 0 else 0
     
     # Top metrics row for filtered data
+    st.markdown("<div class='section-title'>📊 Filtered Analysis</div>", unsafe_allow_html=True)
+    
     col1a, col2a, col3a, col4a = st.columns(4)
     
     with col1a:
-        filtered_avg_reduction = filtered_df['avg_reduction'].mean() if 'avg_reduction' in filtered_df.columns else 0
         st.markdown(f"""
         <div class="metric-card-blue">
             <div class="metric-label">📊 Filtered Data</div>
@@ -1243,7 +1365,6 @@ with col_main:
         """, unsafe_allow_html=True)
     
     with col2a:
-        filtered_avg_reduction = filtered_df['avg_reduction'].mean() if 'avg_reduction' in filtered_df.columns else 0
         reduction_status = "status-good" if filtered_avg_reduction >= 30 else "status-warning"
         reduction_icon = "✅" if filtered_avg_reduction >= 30 else "⚠️"
         st.markdown(f"""
@@ -1257,9 +1378,6 @@ with col_main:
         """, unsafe_allow_html=True)
     
     with col3a:
-        filtered_high_risk = filtered_df['low_adoption_risk'].sum() if 'low_adoption_risk' in filtered_df.columns else 0
-        filtered_success_rate = ((filtered_total - filtered_high_risk) / filtered_total * 100) if filtered_total > 0 else 0
-        
         if filtered_success_rate >= 70:
             success_status = "status-good"
             success_text = "Excellent"
@@ -1326,136 +1444,194 @@ with col_main:
         </div>
         """, unsafe_allow_html=True)
 
-    # Enhanced Analysis Section with 6 tabs
-    st.markdown("<div class='section-title'>📈 Comprehensive Analysis</div>", unsafe_allow_html=True)
+    # =====================================================
+    # COMPREHENSIVE ANALYSIS - TABS
+    # =====================================================
+    st.markdown("<div class='section-title'>📈 Comprehensive Analysis (Click tabs to explore)</div>", unsafe_allow_html=True)
     
     # Tabbed analysis with 6 tabs
     tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+        "🏘️ District Insights", 
         "🗺️ Geographic Analysis", 
         "📊 Performance Metrics",
         "📈 Usage Trends",
         "🎯 Risk Factors",
-        "🌿 Impact Analysis",
-        "📋 Detailed Insights"
+        "🌿 Impact Analysis"
     ])
     
     with tab1:
+        st.markdown("""
+        <div style="background: #f0f9ff; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+        <h4 style="margin: 0 0 10px 0; color: #0369a1;">🎯 Click to see district-level performance insights</h4>
+        <p style="margin: 0; font-size: 0.9rem; color: #475569;">
+        Compare districts by fuel reduction, identify top performers and areas needing support.
+        </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # District comparison
         st.markdown('<div class="plot-container">', unsafe_allow_html=True)
-        st.plotly_chart(create_geographic_map(filtered_df), use_container_width=True)
+        district_fig = create_district_comparison(filtered_df)
+        st.plotly_chart(district_fig, use_container_width=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+        # Additional district insights in 2 columns
+        col_ins1, col_ins2 = st.columns(2)
+        
+        with col_ins1:
+            st.markdown('<div class="plot-container">', unsafe_allow_html=True)
+            st.markdown("### 📊 Adoption Distribution")
+            adoption_fig = create_adoption_distribution(filtered_df)
+            st.plotly_chart(adoption_fig, use_container_width=True)
+            st.markdown('</div>', unsafe_allow_html=True)
+        
+        with col_ins2:
+            st.markdown('<div class="plot-container">', unsafe_allow_html=True)
+            st.markdown("### 💰 Fuel Savings")
+            savings_fig = create_savings_analysis(filtered_df)
+            st.plotly_chart(savings_fig, use_container_width=True)
+            st.markdown('</div>', unsafe_allow_html=True)
+    
+    with tab2:
+        st.markdown("""
+        <div style="background: #f0f9ff; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+        <h4 style="margin: 0 0 10px 0; color: #0369a1;">🗺️ Click to explore geographic patterns</h4>
+        <p style="margin: 0; font-size: 0.9rem; color: #475569;">
+        Visualize household locations, identify clusters, and analyze geographic risk factors.
+        </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Geographic map
+        st.markdown('<div class="plot-container">', unsafe_allow_html=True)
+        map_fig = create_geographic_map(filtered_df)
+        st.plotly_chart(map_fig, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
         
         # Geographic insights
         if len(filtered_df) > 0:
-            col1d, col2d = st.columns(2)
+            col_geo1, col_geo2 = st.columns(2)
             
-            with col1d:
+            with col_geo1:
                 st.markdown('<div class="plot-container">', unsafe_allow_html=True)
-                st.markdown("### 📍 Geographic Clusters")
-                st.info("""
-                **Analysis Finding:** 
-                - Households clustered by geographic proximity
-                - Distance to market strongly correlates with adoption rates
-                - Remote clusters show higher risk profiles
-                """)
+                st.markdown("### 📍 Geographic Patterns")
+                if 'distance_to_market_km' in filtered_df.columns:
+                    avg_distance = filtered_df['distance_to_market_km'].mean()
+                    max_distance = filtered_df['distance_to_market_km'].max()
+                    st.metric("Avg Distance to Market", f"{avg_distance:.1f} km")
+                    st.metric("Max Distance to Market", f"{max_distance:.1f} km")
+                    st.info("**Insight:** Longer distances correlate with lower adoption rates")
                 st.markdown('</div>', unsafe_allow_html=True)
             
-            with col2d:
+            with col_geo2:
                 st.markdown('<div class="plot-container">', unsafe_allow_html=True)
-                st.markdown("### 🎯 High-Risk Areas")
-                if len(filtered_df) > 0:
-                    high_risk_cells = filtered_df[filtered_df['low_adoption_risk'] == 1].shape[0]
-                    st.metric("High-risk households", f"{high_risk_cells:,}")
-                    if 'distance_to_market_km' in filtered_df.columns:
-                        st.metric("Avg distance to market", f"{filtered_df['distance_to_market_km'].mean():.1f} km")
+                st.markdown("### 🎯 High-Risk Clusters")
+                high_risk_clusters = filtered_df[filtered_df['low_adoption_risk'] == 1].shape[0]
+                st.metric("High-risk Households", f"{high_risk_clusters:,}")
+                
+                if 'district' in filtered_df.columns and high_risk_clusters > 0:
+                    high_risk_by_district = filtered_df[filtered_df['low_adoption_risk'] == 1]['district'].value_counts().head(3)
+                    st.markdown("**Top districts with high risk:**")
+                    for district, count in high_risk_by_district.items():
+                        st.write(f"• {district}: {count:,} households")
                 st.markdown('</div>', unsafe_allow_html=True)
-    
-    with tab2:
-        col1e, col2e = st.columns(2)
-        
-        with col1e:
-            st.markdown('<div class="plot-container">', unsafe_allow_html=True)
-            st.plotly_chart(create_performance_distribution(filtered_df), use_container_width=True)
-            st.markdown('</div>', unsafe_allow_html=True)
-        
-        with col2e:
-            st.markdown('<div class="plot-container">', unsafe_allow_html=True)
-            st.plotly_chart(create_intervention_priority(filtered_df), use_container_width=True)
-            st.markdown('</div>', unsafe_allow_html=True)
-        
-        # Performance summary
-        if len(filtered_df) > 0 and 'performance_category' in filtered_df.columns:
-            st.markdown('<div class="plot-container">', unsafe_allow_html=True)
-            st.markdown("### 📊 Performance Summary")
-            
-            perf_counts = filtered_df['performance_category'].value_counts()
-            
-            col_perf1, col_perf2, col_perf3, col_perf4, col_perf5 = st.columns(5)
-            categories = ['Excellent', 'Good', 'Moderate', 'Low', 'Very Low']
-            colors = ['#10b981', '#22c55e', '#3b82f6', '#f59e0b', '#ef4444']
-            
-            for i, (category, color) in enumerate(zip(categories, colors)):
-                with [col_perf1, col_perf2, col_perf3, col_perf4, col_perf5][i]:
-                    count = perf_counts.get(category, 0)
-                    percentage = (count / len(filtered_df)) * 100 if len(filtered_df) > 0 else 0
-                    st.markdown(f"""
-                    <div style="text-align: center; padding: 0.5rem; background: {color}20; border-radius: 8px;">
-                        <div style="font-size: 1.2rem; font-weight: bold; color: {color};">{count:,}</div>
-                        <div style="font-size: 0.8rem; color: #64748b;">{category}</div>
-                        <div style="font-size: 0.7rem; color: #94a3b8;">{percentage:.1f}%</div>
-                    </div>
-                    """, unsafe_allow_html=True)
-            st.markdown('</div>', unsafe_allow_html=True)
     
     with tab3:
-        col1f, col2f = st.columns(2)
+        st.markdown("""
+        <div style="background: #f0f9ff; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+        <h4 style="margin: 0 0 10px 0; color: #0369a1;">📊 Click to analyze overall program performance</h4>
+        <p style="margin: 0; font-size: 0.9rem; color: #475569;">
+        View performance distribution, adoption categories, and detailed metrics.
+        </p>
+        </div>
+        """, unsafe_allow_html=True)
         
-        with col1f:
+        # Overall performance
+        st.markdown('<div class="plot-container">', unsafe_allow_html=True)
+        performance_fig = create_overall_performance(filtered_df)
+        st.plotly_chart(performance_fig, use_container_width=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+        # Performance distribution
+        st.markdown('<div class="plot-container">', unsafe_allow_html=True)
+        distribution_fig = create_performance_distribution(filtered_df)
+        st.plotly_chart(distribution_fig, use_container_width=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    with tab4:
+        st.markdown("""
+        <div style="background: #f0f9ff; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+        <h4 style="margin: 0 0 10px 0; color: #0369a1;">📈 Click to track usage trends over time</h4>
+        <p style="margin: 0; font-size: 0.9rem; color: #475569;">
+        Analyze monthly fuel usage patterns and identify trends in stove adoption.
+        </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Usage trends
+        col_use1, col_use2 = st.columns(2)
+        
+        with col_use1:
             st.markdown('<div class="plot-container">', unsafe_allow_html=True)
-            st.plotly_chart(create_usage_trends(filtered_df), use_container_width=True)
+            usage_fig = create_usage_trends(filtered_df)
+            st.plotly_chart(usage_fig, use_container_width=True)
             st.markdown('</div>', unsafe_allow_html=True)
         
-        with col2f:
+        with col_use2:
             st.markdown('<div class="plot-container">', unsafe_allow_html=True)
-            st.markdown("### 📊 Monthly Usage Analysis")
+            st.markdown("### 📊 Usage Statistics")
             
             if len(filtered_df) > 0:
                 # Identify usage columns
                 usage_cols = [col for col in filtered_df.columns if 'usage_month' in col]
                 
                 if len(usage_cols) > 0:
-                    # Calculate completion rate (non-NaN values)
+                    # Calculate completion rate
                     completion_rate = filtered_df[usage_cols].notna().mean().mean() * 100
                     st.metric("Data Completion Rate", f"{completion_rate:.1f}%")
+                    
+                    # Calculate average monthly usage
+                    avg_usage = filtered_df[usage_cols].mean().mean()
+                    st.metric("Avg Monthly Usage", f"{avg_usage:.1f} kg")
                     
                     # Calculate variability
                     if len(usage_cols) >= 2:
                         variability = filtered_df[usage_cols].std(axis=1).mean()
-                        st.metric("Average Monthly Variability", f"{variability:.1f} kg")
+                        st.metric("Monthly Variability", f"{variability:.1f} kg")
                     
-                    # Show missing data pattern
-                    missing_by_month = filtered_df[usage_cols].isna().sum()
-                    st.markdown("**Missing Data by Month:**")
-                    for col, missing in missing_by_month.items():
-                        month_num = col.replace('usage_month_', '')
-                        missing_pct = (missing / len(filtered_df)) * 100
-                        st.progress(1 - (missing_pct/100), 
-                                  text=f"Month {month_num}: {missing} missing ({missing_pct:.1f}%)")
+                    # Trend analysis
+                    if len(usage_cols) >= 3:
+                        first_month = filtered_df[usage_cols[0]].mean()
+                        last_month = filtered_df[usage_cols[-1]].mean()
+                        trend = ((last_month - first_month) / first_month) * 100
+                        st.metric("Usage Trend", f"{trend:.1f}%", "Over monitoring period")
                 else:
                     st.info("No monthly usage data columns found")
             
             st.markdown('</div>', unsafe_allow_html=True)
     
-    with tab4:
-        col1g, col2g = st.columns(2)
+    with tab5:
+        st.markdown("""
+        <div style="background: #f0f9ff; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+        <h4 style="margin: 0 0 10px 0; color: #0369a1;">🎯 Click to analyze risk factors and predictors</h4>
+        <p style="margin: 0; font-size: 0.9rem; color: #475569;">
+        Identify key risk factors and their correlation with low adoption rates.
+        </p>
+        </div>
+        """, unsafe_allow_html=True)
         
-        with col1g:
+        # Risk analysis
+        col_risk1, col_risk2 = st.columns(2)
+        
+        with col_risk1:
             st.markdown('<div class="plot-container">', unsafe_allow_html=True)
-            st.plotly_chart(create_risk_heatmap(filtered_df), use_container_width=True)
+            risk_fig = create_risk_heatmap(filtered_df)
+            st.plotly_chart(risk_fig, use_container_width=True)
             st.markdown('</div>', unsafe_allow_html=True)
         
-        with col2g:
+        with col_risk2:
             st.markdown('<div class="plot-container">', unsafe_allow_html=True)
-            st.markdown("### 🎯 Risk Factor Analysis")
+            st.markdown("### 📊 Risk Factor Analysis")
             
             if len(filtered_df) > 0:
                 # Calculate correlations
@@ -1495,10 +1671,20 @@ with col_main:
             
             st.markdown('</div>', unsafe_allow_html=True)
     
-    with tab5:
-        col1h, col2h = st.columns(2)
+    with tab6:
+        st.markdown("""
+        <div style="background: #f0f9ff; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+        <h4 style="margin: 0 0 10px 0; color: #0369a1;">🌿 Click to measure environmental and economic impact</h4>
+        <p style="margin: 0; font-size: 0.9rem; color: #475569;">
+        Calculate fuel savings, CO₂ reduction, and economic benefits of the program.
+        </p>
+        </div>
+        """, unsafe_allow_html=True)
         
-        with col1h:
+        # Impact analysis
+        col_imp1, col_imp2 = st.columns(2)
+        
+        with col_imp1:
             st.markdown('<div class="plot-container">', unsafe_allow_html=True)
             st.markdown("### 🌍 Environmental Impact")
             
@@ -1509,14 +1695,14 @@ with col_main:
                 co2_reduction = annual_savings * 1.8  # Approx 1.8 kg CO2 per kg fuelwood
                 trees_saved = annual_savings / 500  # Approx 500 kg per tree per year
                 
-                st.metric("Weekly Fuel Saved", f"{weekly_savings/1000:,.0f} tons")
-                st.metric("Annual Fuel Saved", f"{annual_savings/1000:,.0f} tons")
-                st.metric("CO₂ Reduction", f"{co2_reduction/1000:,.0f} tons")
+                st.metric("Weekly Fuel Saved", f"{weekly_savings/1000:,.1f} tons")
+                st.metric("Annual Fuel Saved", f"{annual_savings/1000:,.1f} tons")
+                st.metric("CO₂ Reduction", f"{co2_reduction/1000:,.1f} tons")
                 st.metric("Trees Protected", f"{trees_saved:,.0f}")
             
             st.markdown('</div>', unsafe_allow_html=True)
         
-        with col2h:
+        with col_imp2:
             st.markdown('<div class="plot-container">', unsafe_allow_html=True)
             st.markdown("### 💰 Economic Impact")
             
@@ -1539,67 +1725,10 @@ with col_main:
                     st.metric("Annual Economic Value", f"${weekly_wage_savings * 52:,.0f}")
             
             st.markdown('</div>', unsafe_allow_html=True)
-    
-    with tab6:
-        # Detailed insights tab
-        st.markdown('<div class="plot-container">', unsafe_allow_html=True)
-        st.markdown("### 📋 Detailed District Insights")
-        
-        if len(filtered_df) > 0 and 'district' in filtered_df.columns:
-            # Create a detailed table
-            detailed_stats = filtered_df.groupby('district').agg({
-                'avg_reduction': ['mean', 'std', 'min', 'max'],
-                'household_id': 'count',
-                'low_adoption_risk': 'mean',
-                'distance_to_market_km': 'mean',
-                'household_size': 'mean'
-            }).round(2)
-            
-            # Flatten column names
-            detailed_stats.columns = ['_'.join(col).strip() for col in detailed_stats.columns.values]
-            detailed_stats = detailed_stats.reset_index()
-            
-            # Rename columns for readability
-            column_mapping = {
-                'district': 'District',
-                'avg_reduction_mean': 'Avg Reduction (%)',
-                'avg_reduction_std': 'Std Dev',
-                'avg_reduction_min': 'Min Reduction',
-                'avg_reduction_max': 'Max Reduction',
-                'household_id_count': 'Households',
-                'low_adoption_risk_mean': 'Risk Rate',
-                'distance_to_market_km_mean': 'Avg Distance (km)',
-                'household_size_mean': 'Avg Household Size'
-            }
-            
-            detailed_stats = detailed_stats.rename(columns=column_mapping)
-            
-            # Display the table
-            st.dataframe(
-                detailed_stats,
-                use_container_width=True,
-                hide_index=True,
-                column_config={
-                    "Avg Reduction (%)": st.column_config.ProgressColumn(
-                        "Avg Reduction (%)",
-                        help="Average fuel reduction percentage",
-                        format="%.1f%%",
-                        min_value=0,
-                        max_value=100,
-                    ),
-                    "Risk Rate": st.column_config.ProgressColumn(
-                        "Risk Rate",
-                        help="Percentage of households below 30% target",
-                        format="%.1f%%",
-                        min_value=0,
-                        max_value=100,
-                    ),
-                }
-            )
-        
-        st.markdown('</div>', unsafe_allow_html=True)
 
-# Data Quality Section
+# =====================================================
+# DATA QUALITY SECTION
+# =====================================================
 st.markdown("<div class='section-title'>🔍 Data Quality & Technical Insights</div>", unsafe_allow_html=True)
 
 col_qual1, col_qual2, col_qual3 = st.columns(3)
@@ -1624,15 +1753,14 @@ with col_qual1:
         </div>
         <div style="background: #f0f9ff; padding: 0.75rem; border-radius: 6px; margin-top: 0.5rem;">
             <div style="font-size: 0.85rem; color: #0369a1;">
-                <strong>Insight:</strong> {:.1f}% of households have complete monthly usage data
+                <strong>Insight:</strong> High data quality enables reliable analysis
             </div>
         </div>
     </div>
     """.format(
         len(df),
         df.dropna(subset=['avg_reduction', 'distance_to_market_km']).shape[0],
-        (df.dropna(subset=['avg_reduction', 'distance_to_market_km']).shape[0] / len(df)) * 100,
-        (df.dropna(subset=[col for col in df.columns if 'usage_month' in col]).shape[0] / len(df)) * 100
+        (df.dropna(subset=['avg_reduction', 'distance_to_market_km']).shape[0] / len(df)) * 100
     ), unsafe_allow_html=True)
 
 with col_qual2:
@@ -1655,7 +1783,7 @@ with col_qual2:
         </div>
         <div style="background: #f0fdf4; padding: 0.75rem; border-radius: 6px; margin-top: 0.5rem;">
             <div style="font-size: 0.85rem; color: #166534;">
-                <strong>Technical Note:</strong> Model identifies 61.9% of at-risk households with 61.8% accuracy
+                <strong>Technical Note:</strong> Model identifies 61.9% of at-risk households
             </div>
         </div>
     </div>
@@ -1681,16 +1809,18 @@ with col_qual3:
         </div>
         <div style="background: #fef3c7; padding: 0.75rem; border-radius: 6px; margin-top: 0.5rem;">
             <div style="font-size: 0.85rem; color: #92400e;">
-                <strong>Methodology:</strong> Data analyzed using logistic regression with 5-fold cross-validation
+                <strong>Methodology:</strong> 5-fold cross-validated logistic regression
             </div>
         </div>
     </div>
     """.format(len(df)), unsafe_allow_html=True)
 
-# Final Footer
+# =====================================================
+# FOOTER
+# =====================================================
 st.markdown("---")
 st.markdown("""
-<div style="text-align: center; color: #64748b; padding: 2rem;">
+<div style="text-align: center; color: #64748b; padding: 1.5rem;">
     <div style="font-size: 0.9rem; margin-bottom: 0.5rem; display: flex; justify-content: center; align-items: center; gap: 10px;">
         <span>🔥 Sustainable Cooking Impact Dashboard • DelAgua Stove Adoption Programme</span>
     </div>
@@ -1698,8 +1828,7 @@ st.markdown("""
         Data updated: March 2024 • {total_households:,} households analyzed • {high_risk_count:,} high-risk households identified
     </div>
     <div style="font-size: 0.75rem; color: #cbd5e1;">
-        Interactive version of the DelAgua Strategic Analysis Report • 
-        Built with Streamlit • 
+        Interactive version of the DelAgua Strategic Analysis Report • Built with Streamlit • 
         For technical support: Samson Niyizurugero • sniyizurugero@aimsric.org
     </div>
 </div>
