@@ -9,7 +9,7 @@ def load_and_clean_data():
     """Load and clean dataset with proper district name cleaning."""
     try:
         # Load your actual CSV
-        df = pd.read_csv("delagua_stove_data_cleaned.csv")
+        df = pd.read_csv(".streamlit/delagua_stove_data_cleaned.csv")
         
         # Clean district names
         if 'district' in df.columns:
