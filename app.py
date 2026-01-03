@@ -156,8 +156,8 @@ def load_and_process_data():
         
         # Ensure other essential columns exist
         if 'district' not in df.columns:
-            districts = ['Rulindo', 'Musanze', 'Burera', 'Gakenke', 'Nyabihu', 
-                        'Rubavu', 'Rutsiro', 'Ngororero', 'Karongi', 'Nyamasheke']
+            districts = ['Rulindo', 'Musanze', 'Burera', 'Gakenke', 'Nyabihu']
+                        
             df['district'] = np.random.choice(districts, len(df))
         
         if 'latitude' not in df.columns:
